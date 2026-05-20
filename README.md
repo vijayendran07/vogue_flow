@@ -81,3 +81,4 @@ npm run dev
 - **Checkout**: Multi-step checkout process with integrated Stripe test payments.
 - **Admin Dashboard**: Secured routes for user management, real-time analytics charts, and comprehensive order/product CRUD operations with multi-image Cloudinary uploads.
 - **Premium UX**: Responsive skeleton loaders, staggered grid layout animations, glassmorphic headers, and beautifully styled empty/error states.
+# vogue_flow
