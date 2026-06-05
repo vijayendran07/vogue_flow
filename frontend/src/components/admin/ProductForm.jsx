@@ -34,12 +34,20 @@ const ProductForm = ({ title, categories = [], defaultValues = {}, onSubmit, loa
   const { fields, append, remove } = useFieldArray({ control, name: 'variants' });
   const [existingImages, setExistingImages] = useState(defaultValues.images || []);
   const [newImages, setNewImages] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   useEffect(() => {
+    let defaultCats = [];
+    if (Array.isArray(defaultValues.category)) {
+      defaultCats = defaultValues.category.map((c) => c._id || c);
+    } else if (defaultValues.category) {
+      defaultCats = [defaultValues.category._id || defaultValues.category];
+    }
+    setSelectedCategories(defaultCats);
     const sanitized = {
       name: defaultValues.name || '',
       description: defaultValues.description || '',
-      category: defaultValues.category?._id || defaultValues.category || '',
+      category: defaultCats,
       brand: defaultValues.brand || '',
       sku: defaultValues.sku || '',
       price: defaultValues.price ?? '',
@@ -127,13 +135,14 @@ const ProductForm = ({ title, categories = [], defaultValues = {}, onSubmit, loa
   };
 
   const submitHandler = (data) => {
-    if (!data.category) {
-      toast.error('Please select a category.');
+    if (selectedCategories.length === 0) {
+      toast.error('Please select at least one category.');
       return;
     }
 
     const payload = {
       ...data,
+      category: selectedCategories,
       price: Number(data.price),
       discountPrice: Number(data.discountPrice) || 0,
       stock: Number(data.stock),
@@ -178,14 +187,33 @@ const ProductForm = ({ title, categories = [], defaultValues = {}, onSubmit, loa
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Category</label>
-            <select {...register('category', { required: true })} className="mt-2 block w-full rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 focus:ring-2 focus:ring-primary-500">
-              <option value="">Choose category</option>
-              {categories.map((category) => (
-                <option key={category._id} value={category._id}>{category.name}</option>
-              ))}
-            </select>
-            {errors.category && <p className="mt-1 text-sm text-red-500">Category is required.</p>}
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Categories</label>
+            {categories.length === 0 ? (
+              <p className="mt-2 text-sm text-amber-600 dark:text-amber-400">
+                No categories found. Create one first in Admin Categories, then return here.
+              </p>
+            ) : (
+              <div className="mt-2 border border-gray-300 dark:border-gray-700 rounded-2xl p-4 bg-white dark:bg-gray-900/50 max-h-40 overflow-y-auto space-y-2">
+                {categories.map((category) => (
+                  <label key={category._id} className="flex items-center gap-3 text-sm text-gray-900 dark:text-white cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      value={category._id}
+                      checked={selectedCategories.includes(category._id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedCategories([...selectedCategories, category._id]);
+                        } else {
+                          setSelectedCategories(selectedCategories.filter((id) => id !== category._id));
+                        }
+                      }}
+                      className="rounded border-gray-300 dark:border-gray-700 text-primary-600 focus:ring-primary-500 w-4 h-4 bg-white dark:bg-gray-950"
+                    />
+                    {category.name}
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

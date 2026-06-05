@@ -50,7 +50,7 @@ const StripePaymentForm = ({ orderId }) => {
             <button
                 type="submit"
                 disabled={!stripe || isProcessing}
-                className="w-full h-14 bg-gradient-to-r from-gray-900 via-primary-700 to-gray-900 dark:from-white dark:via-primary-400 dark:to-white text-white dark:text-gray-900 font-bold rounded-2xl shadow-xl hover:shadow-2xl transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full h-14 bg-gray-950 dark:bg-white text-white dark:text-gray-900 font-bold rounded-2xl shadow-xl hover:shadow-2xl transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
                 {isProcessing ? (
                     <>

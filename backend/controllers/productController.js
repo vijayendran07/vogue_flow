@@ -92,22 +92,47 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
-    const resultPerPage = 20;
+    const resultPerPage = Number(req.query.limit) || 20;
     const productsCount = await Product.countDocuments({ deleted: false });
 
     await resolveCategoryQuery(req.query);
 
-    const apiFeature = new ApiFeatures(Product.find({ deleted: false }).populate('category', 'name'), req.query)
+    // Apply discount percentage filter directly in MongoDB using $expr
+    const discountParam = req.query.discount;
+    let discountQuery = {};
+    if (discountParam) {
+        const match = discountParam.match(/(\d+)/);
+        if (match) {
+            const minDiscount = parseInt(match[1], 10);
+            discountQuery = {
+                $expr: {
+                    $and: [
+                        { $gt: ["$discountPrice", 0] },
+                        { $lt: ["$discountPrice", "$price"] },
+                        { $gte: [
+                            { $multiply: [ { $subtract: ["$price", "$discountPrice"] }, 100 ] },
+                            { $multiply: [ minDiscount, "$price" ] }
+                        ]}
+                    ]
+                }
+            };
+        }
+    }
+
+    const apiFeature = new ApiFeatures(
+        Product.find({ deleted: false, ...discountQuery }).populate('category', 'name'),
+        req.query
+    )
         .search()
         .filter()
         .sort();
 
-    let products = await apiFeature.query;
-    let filteredProductsCount = products.length;
+    // Get the total matching count before pagination by cloning the query
+    const filteredProductsCount = await apiFeature.query.clone().countDocuments();
 
+    // Paginate in the DB
     apiFeature.pagination(resultPerPage);
-
-    products = await apiFeature.query.clone().lean();
+    const products = await apiFeature.query.lean();
 
     res.status(200).json({
         success: true,
@@ -129,11 +154,10 @@ exports.getAdminProducts = catchAsyncErrors(async (req, res, next) => {
         .filter()
         .sort();
 
-    let products = await apiFeature.query;
-    let filteredProductsCount = products.length;
+    const filteredProductsCount = await apiFeature.query.clone().countDocuments();
 
     apiFeature.pagination(resultPerPage);
-    products = await apiFeature.query.clone().lean();
+    const products = await apiFeature.query.lean();
 
     res.status(200).json({
         success: true,

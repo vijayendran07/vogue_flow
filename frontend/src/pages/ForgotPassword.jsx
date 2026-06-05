@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import api from '../services/api';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { openAuthModal } from '../redux/slices/authSlice';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,9 +52,9 @@ const ForgotPassword = () => {
         </button>
         <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
           Remember your password?{' '}
-          <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">
+          <button type="button" onClick={() => { navigate('/'); dispatch(openAuthModal('login')); }} className="font-medium text-primary-600 hover:text-primary-500">
             Login
-          </Link>
+          </button>
         </p>
       </form>
     </div>

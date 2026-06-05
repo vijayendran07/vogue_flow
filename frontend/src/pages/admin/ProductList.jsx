@@ -12,7 +12,7 @@ import api from '../../services/api';
 
 const ProductList = () => {
   const dispatch = useDispatch();
-  const { loading, error, products, isDeleted, isUpdated } = useSelector((state) => state.products || {});
+  const { loading, error, products, isDeleted, isUpdated, productsCount, filteredProductsCount, resultPerPage } = useSelector((state) => state.products || {});
   const { categories } = useSelector((state) => state.categories);
 
   const [keyword, setKeyword] = useState('');
@@ -22,6 +22,11 @@ const ProductList = () => {
   const [sort, setSort] = useState('newest');
   const [selectedIds, setSelectedIds] = useState([]);
   const [bulkStatus, setBulkStatus] = useState('Active');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [keyword, categoryFilter, stockFilter, statusFilter, sort]);
 
   useEffect(() => {
     if (error) {
@@ -39,11 +44,14 @@ const ProductList = () => {
   }, [dispatch, error, isDeleted, isUpdated]);
 
   useEffect(() => {
-    dispatch(getAdminProducts({ keyword, category: categoryFilter, stock: stockFilter, status: statusFilter, sort }));
+    dispatch(getAdminProducts({ keyword, category: categoryFilter, stock: stockFilter, status: statusFilter, sort, page: currentPage, limit: 12 }));
     dispatch(getCategories());
-  }, [dispatch, keyword, categoryFilter, stockFilter, statusFilter, sort, isDeleted, isUpdated]);
+  }, [dispatch, keyword, categoryFilter, stockFilter, statusFilter, sort, isDeleted, isUpdated, currentPage]);
 
   const selectedCount = selectedIds.length;
+  const limit = resultPerPage || 12;
+  const totalItems = filteredProductsCount !== undefined ? filteredProductsCount : (productsCount || 0);
+  const totalPages = Math.max(1, Math.ceil(totalItems / limit));
 
   const handleSelectToggle = (id) => {
     setSelectedIds((current) =>
@@ -317,6 +325,60 @@ const ProductList = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="mt-8 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 pt-6">
+          <div className="flex flex-1 justify-between sm:hidden">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
+            >
+              Next
+            </button>
+          </div>
+          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm text-gray-750 dark:text-gray-300">
+                Showing <span className="font-semibold text-gray-900 dark:text-white">{((currentPage - 1) * limit) + 1}</span> to{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {Math.min(currentPage * limit, totalItems)}
+                </span>{' '}
+                of <span className="font-semibold text-gray-900 dark:text-white">{totalItems}</span> results
+              </p>
+            </div>
+            <div>
+              <nav className="isolate inline-flex -space-x-px rounded-full shadow-sm" aria-label="Pagination">
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="relative inline-flex items-center rounded-l-full border border-gray-300 bg-white px-3 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800"
+                >
+                  Previous
+                </button>
+                <span className="relative inline-flex items-center border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="relative inline-flex items-center rounded-r-full border border-gray-300 bg-white px-3 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800"
+                >
+                  Next
+                </button>
+              </nav>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

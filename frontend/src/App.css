@@ -181,4 +181,5 @@
     right: 0;
     border-right-color: var(--border);
   }
+  /* Hide Scrollbar */ .scrollbar-hide::-webkit-scrollbar { display: none; } .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
 }

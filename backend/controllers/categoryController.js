@@ -81,7 +81,9 @@ exports.deleteCategory = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler('Category not found', 404));
     }
 
-    const productsAttached = await Product.findOne({ category: categoryId });
+    // Only block deletion when there are active (non-deleted) products.
+    // Soft-deleted products should not prevent category cleanup.
+    const productsAttached = await Product.findOne({ category: categoryId, deleted: false });
     if (productsAttached) {
         return next(new ErrorHandler('Cannot delete category. Products are associated with it.', 400));
     }

@@ -1,10 +1,12 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { optimizeUnsplashUrl } from '../utils/imageOptimizer';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
-import { FiSearch, FiArrowRight, FiChevronRight, FiCreditCard, FiTag } from 'react-icons/fi';
+import { FiSearch, FiArrowRight, FiChevronRight,FiChevronLeft, FiCreditCard, FiTag } from 'react-icons/fi';
+import api from '../services/api';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -18,14 +20,17 @@ import { toast } from 'react-toastify';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import MetaData from '../components/MetaData';
+import ShopByCategories from '../components/product/ShopByCategories';
 
-const Home = () => {
+const Home = () =>{
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { loading, error, products } = useSelector((state) => state.products);
   const { categories, loading: categoriesLoading } = useSelector((state) => state.categories);
   const { banners, loading: bannersLoading } = useSelector((state) => state.banners);
+
+  const [activeCoupon, setActiveCoupon] = useState(null);
 
   const featuredProducts = useMemo(
     () => (products && products.length > 0 ? products.slice(0, 8) : []),
@@ -53,6 +58,7 @@ const Home = () => {
     dispatch(getProducts({
       keyword: '',
       currentPage: 1,
+      limit: 150,
       price: [0, 250000],
       category: '',
       ratings: 0,
@@ -60,6 +66,20 @@ const Home = () => {
     }));
     dispatch(getCategories());
     dispatch(getBanners());
+
+    // Fetch active coupons dynamically for the banner
+    const fetchActiveCoupons = async () => {
+      try {
+        const { data } = await api.get('/coupons');
+        if (data.success && data.coupons && data.coupons.length > 0) {
+          // Use the first active coupon (nearest expiry)
+          setActiveCoupon(data.coupons[0]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch coupons for home banner', err);
+      }
+    };
+    fetchActiveCoupons();
   }, [dispatch]);
 
   const handleSearchClick = () => {
@@ -96,17 +116,81 @@ const Home = () => {
     }
   ];
 
+  const offerCards = [
+    {
+      title: 'Flat 30% Off',
+      subtitle: 'On selected fashion picks',
+      cta: 'Shop Deals',
+      query: '/products?sort=lowest',
+      tone: 'from-rose-500 to-pink-500',
+    },
+    {
+      title: 'Buy 2 Get 1',
+      subtitle: 'Applies on trending styles',
+      cta: 'Explore Trend',
+      query: '/products?sort=toprated',
+      tone: 'from-indigo-500 to-blue-500',
+    },
+    {
+      title: 'Free Delivery',
+      subtitle: 'On orders above INR 1000',
+      cta: 'Start Shopping',
+      query: '/products',
+      tone: 'from-emerald-500 to-teal-500',
+    },
+  ];
+
+  const topRatedProducts = useMemo(() => {
+    if (!products || products.length === 0) return [];
+    return [...products]
+      .sort((a, b) => (b.ratings || 0) - (a.ratings || 0))
+      .slice(0, 4);
+  }, [products]);
+
+  const priceDropProducts = useMemo(() => {
+    if (!products || products.length === 0) return [];
+    return products
+      .filter((p) => p.discountPrice && p.discountPrice > 0 && p.discountPrice < p.price)
+      .slice(0, 4);
+  }, [products]);
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300 text-gray-900 dark:text-gray-100 pb-20 md:pb-0">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 text-gray-900 dark:text-gray-100 pb-10 md:pb-0">
       <MetaData title="VogueFlow - Home" />
 
-      {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      {/* Main Container - full bleed */}
+      <div className="w-full overflow-hidden">
         
 
 
-        {/* 2. Top Scrollable Category Bubbles */}
-        <div className="mb-8">
+        {/* 4. Large Hero Carousel */}
+        <section className="w-full mb-0 overflow-hidden relative border-b border-gray-100 dark:border-gray-800">
+          <Swiper
+            modules={[Autoplay, Pagination]}
+            spaceBetween={0}
+            slidesPerView={1}
+            autoplay={{ delay: 4000, disableOnInteraction: false }}
+            pagination={{ clickable: true }}
+            className="w-full aspect-[16/9] sm:aspect-[25/8]">
+            {(banners && banners.length > 0 ? banners : heroBanners).map((banner) => {
+              const bgImgUrl = optimizeUnsplashUrl(typeof banner.bgImage === 'string' ? banner.bgImage : banner.bgImage?.url, 1200);
+              return (
+                <SwiperSlide key={banner._id || banner.id}>
+                  <div className="relative w-full h-full group cursor-pointer" onClick={() => navigate('/products')}>
+                    <img src={bgImgUrl} alt={banner.title || "VogueFlow Campaign"} className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700" />
+                    
+                    <div className="absolute bottom-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 group-hover:bg-white group-hover:text-black transition-colors">
+                      <FiChevronRight className="w-5 h-5" />
+                    </div>
+                  </div>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        </section>
+
+        {/* 2. Scrollable Category Bubbles */}
+        <section className="w-full px-4 lg:px-6 py-4 bg-white text-gray-900 dark:bg-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800">
           {categoriesLoading ? (
             <div className="flex gap-4 overflow-hidden">
               {[1, 2, 3, 4, 5, 6].map(n => (
@@ -117,17 +201,17 @@ const Home = () => {
               ))}
             </div>
           ) : (
-            <div className="flex overflow-x-auto hide-scrollbar gap-4 sm:gap-6 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="flex overflow-x-auto hide-scrollbar gap-4 sm:gap-6 pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
               {categories && categories.map((category, index) => (
                 <Link 
                   key={category._id} 
                   to={`/products?category=${category._id}`}
                   className="flex flex-col items-center gap-2 group flex-shrink-0"
                 >
-                  <div className="w-[72px] h-[72px] sm:w-[84px] sm:h-[84px] rounded-2xl sm:rounded-[28px] p-[2px] bg-gradient-to-br from-sky-300 via-pink-300 to-primary-400 group-hover:scale-105 transition-transform duration-300 shadow-md">
+                  <div className="w-[72px] h-[72px] sm:w-[84px] sm:h-[84px] rounded-2xl sm:rounded-[28px] p-[2px] bg-pink-500 group-hover:scale-105 transition-transform duration-300 shadow-md">
                     <div className="w-full h-full rounded-2xl sm:rounded-[26px] overflow-hidden bg-white dark:bg-gray-900 border-2 border-white dark:border-gray-900">
                       <img 
-                        src={category.image?.url || categoryImages[index % categoryImages.length]} 
+                        src={optimizeUnsplashUrl(category.image?.url || categoryImages[index % categoryImages.length], 120)} 
                         alt={category.name} 
                         className="w-full h-full object-cover"
                       />
@@ -140,111 +224,166 @@ const Home = () => {
               ))}
             </div>
           )}
-        </div>
+        </section>
 
-        {/* 3. Promotional Banner */}
-        <Link to="/products" className="block mb-8 rounded-2xl overflow-hidden shadow-lg relative group">
-          <div className="absolute inset-0 bg-gradient-to-r from-orange-100 via-rose-100 to-pink-100 dark:from-orange-900/40 dark:via-rose-900/40 dark:to-pink-900/40 mix-blend-multiply" />
-          <div className="bg-gradient-to-r from-orange-50 via-rose-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 sm:p-6 flex items-center justify-between relative border border-rose-100 dark:border-rose-900/30">
-            <div>
-              <h3 className="text-2xl sm:text-3xl font-black text-orange-600 dark:text-orange-400">Get 25% Off</h3>
-              <p className="text-sm font-bold text-gray-700 dark:text-gray-300 mt-1">Up to ₹200 Off*</p>
-            </div>
-            <div className="bg-white dark:bg-gray-950 px-4 py-2 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center">
-              <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Coupon Code</span>
-              <span className="font-black text-gray-900 dark:text-white">VOGUESAVE</span>
-            </div>
-          </div>
+{/* 6. Shop By Categories With Products */}
+<ShopByCategories
+  categories={categories}
+  products={products}
+  categoryImages={categoryImages}
+  loading={loading}
+  categoriesLoading={categoriesLoading}
+  activeCoupon={activeCoupon}
+/>
+
+
+
+
+
+       
+
+        
+
+{/* 14. Brand Content / SEO Section */}
+<section className="w-full px-4 lg:px-8 py-10 bg-white dark:bg-[#121212] text-gray-800 dark:text-gray-200">
+  <div className="max-w-full text-left font-sans">
+    
+    <h3 className="text-base sm:text-lg font-bold mb-4 text-gray-900 dark:text-white">
+      VOGUEFLOW – Online Shopping Website
+    </h3>
+    
+    <h4 className="text-sm sm:text-[15px] font-bold mb-2 uppercase text-gray-900 dark:text-white">
+      FASHION THAT DEFINES YOUR LIFESTYLE
+    </h4>
+    <p className="text-[13px] sm:text-sm leading-relaxed mb-4 text-gray-700 dark:text-gray-300">
+      If you are looking for the ultimate destination for fashion, lifestyle, and trend-driven shopping in India, VOGUEFLOW is the perfect place for you. Discover premium fashion, modern streetwear, accessories, footwear, beauty essentials, and lifestyle collections crafted for the next generation.
+    </p>
+
+    <h4 className="text-[13px] sm:text-sm font-bold mt-6 mb-2 text-gray-900 dark:text-white">
+      Men’s Fashion
+    </h4>
+    <p className="text-[13px] sm:text-sm leading-relaxed mb-4 text-gray-700 dark:text-gray-300">
+      Explore oversized T-shirts, relaxed-fit jeans, cargo pants, hoodies, jackets, coordinated outfits, and modern essentials designed for everyday confidence and effortless style. Check out a range of <span className="text-pink-600 dark:text-pink-400 cursor-pointer hover:underline">Men's Clothing</span> to take your wardrobe to the next level. You will find tons of options in terms of fits, price, and more.
+    </p>
+
+    <h4 className="text-[13px] sm:text-sm font-bold mt-6 mb-2 text-gray-900 dark:text-white">
+      Women’s Fashion
+    </h4>
+    <p className="text-[13px] sm:text-sm leading-relaxed mb-4 text-gray-700 dark:text-gray-300">
+      Discover elegant dresses, trendy tops, ethnic wear, co-ords, oversized fits, skirts, and statement pieces inspired by global fashion culture and modern aesthetics. Explore a wide range of offerings from savvy brands. You will also find plenty of options in <span className="text-pink-600 dark:text-pink-400 cursor-pointer hover:underline">Western Wear</span>, <span className="text-pink-600 dark:text-pink-400 cursor-pointer hover:underline">Ethnic Wear</span>, Dresses, and more.
+    </p>
+
+    <h4 className="text-[13px] sm:text-sm font-bold mt-6 mb-2 text-gray-900 dark:text-white">
+      Footwear & Accessories
+    </h4>
+    <p className="text-[13px] sm:text-sm leading-relaxed mb-4 text-gray-700 dark:text-gray-300">
+      At VOGUEFLOW, you will always find plenty of <span className="text-pink-600 dark:text-pink-400 cursor-pointer hover:underline">Footwear</span> to keep your style fresh. Complete your look with premium sneakers, sandals, watches, bags, sunglasses, jewellery, and fashion accessories crafted for comfort, utility, and style.
+    </p>
+
+    <h4 className="text-[13px] sm:text-sm font-bold mt-6 mb-2 text-gray-900 dark:text-white">
+      Beauty & Home Living
+    </h4>
+    <p className="text-[13px] sm:text-sm leading-relaxed mb-4 text-gray-700 dark:text-gray-300">
+      If you are still on the lookout for the perfect <span className="text-pink-600 dark:text-pink-400 cursor-pointer hover:underline">Beauty Essentials</span> that suit your daily needs and fit your budget, you are guaranteed to find them at VOGUEFLOW. Refresh your lifestyle with skincare, grooming essentials, décor, bedding, organizers, and modern home collections designed for contemporary living spaces.
+    </p>
+
+    <h4 className="text-[13px] sm:text-sm font-bold mt-6 mb-2 text-gray-900 dark:text-white">
+      Premium Fashion At Affordable Prices
+    </h4>
+    <p className="text-[13px] sm:text-sm leading-relaxed mb-4 text-gray-700 dark:text-gray-300">
+      At VOGUEFLOW, we believe fashion should be accessible to everyone. From premium streetwear and seasonal collections to everyday essentials and exclusive drops, our platform combines quality, affordability, and trend-driven fashion in one modern shopping experience. Experience <span className="text-pink-600 dark:text-pink-400 cursor-pointer hover:underline">Fast Delivery</span>, Secure Payments, and Easy Returns on all your orders.
+    </p>
+
+  </div>
+</section>
+
+{/* 14. Popular Searches */}
+<section className="w-full px-4 lg:px-6 py-6 bg-white text-gray-900 dark:bg-gray-900 dark:text-white border-t border-gray-100 dark:border-gray-800">
+ 
+
+    {/* Heading */}
+    <div className="flex items-center justify-between mb-6">
+
+      <div>
+        
+        <h2 className="text-lg text-black-500 dark:text-black-900 font-bold mt-2">
+        
+          Popular Searches
+        
+        </h2>
+      </div>
+    </div>
+
+    {/* Search Tags */}
+    <div className="flex flex-wrap gap-3">
+
+      {[
+        'Blazer',
+        'Boots',
+        'Bag',
+        'Blouse Designs',
+        'Jackets',
+        'Earrings',
+        'Dresses',
+        'Kurtis',
+        'Kurta Set For Women',
+        'Blankets',
+        'Sport Shoes',
+        'Sweaters',
+        'Shirts',
+        'Gowns',
+        'Kurtas',
+        'Track Pants',
+        'Socks',
+        'Co Ord Sets Women',
+        'Hoodies',
+        'Sarees',
+        'Jeans',
+        'Bras',
+        'Shoes',
+        'Sandals',
+        'Watches',
+        'Tshirts',
+        'Lehenga',
+        'Flip Flops',
+        'Tops',
+        'Shapewear',
+        'Sneakers',
+        'Mama Earth',
+        'Leggings',
+        'Salwars',
+        'Dress Material',
+        'Shoes For Men',
+        'Puma',
+        'Crocs',
+        'Snitch',
+        'H&M',
+        'Luggage Bags',
+        'Trolley Bags',
+        'Boleros',
+        'Skirts',
+        'Top',
+        'Sharara',
+        'Bedsheets',
+        'Towels',
+        'Nike',
+        'Adidas',
+        'Sports Shoes',
+      ].map((item) => (
+        <Link
+          key={item}
+          to={`/products?keyword=${item}`}
+          className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-pink-600 dark:hover:text-pink-400 transition-colors duration-200"
+        >
+          {item}
         </Link>
-
-        {/* 4. Large Hero Carousel */}
-        <div className="mb-8 rounded-3xl overflow-hidden shadow-2xl relative">
-          <Swiper
-            modules={[Autoplay, Pagination]}
-            spaceBetween={0}
-            slidesPerView={1}
-            autoplay={{ delay: 4000, disableOnInteraction: false }}
-            pagination={{ clickable: true }}
-            className="w-full aspect-[4/3] sm:aspect-[21/9]"
-          >
-            {(banners && banners.length > 0 ? banners : heroBanners).map((banner) => {
-              const bgImgUrl = typeof banner.bgImage === 'string' ? banner.bgImage : banner.bgImage?.url;
-              return (
-                <SwiperSlide key={banner._id || banner.id}>
-                  <div className="relative w-full h-full group cursor-pointer" onClick={() => navigate('/products')}>
-                    <img src={bgImgUrl} alt={banner.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    
-                    <div className="absolute bottom-0 left-0 w-full p-6 sm:p-10 text-white">
-                      {banner.brands && (
-                        <div className="inline-block bg-white text-gray-900 px-4 py-1.5 rounded-lg font-black text-xs sm:text-sm mb-4 shadow-lg">
-                          {banner.brands}
-                        </div>
-                      )}
-                      <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-none mb-2 drop-shadow-lg">
-                        {banner.title}
-                      </h2>
-                      <div className="flex items-center gap-3">
-                        {banner.subtitle && <p className="text-lg font-medium text-gray-200">{banner.subtitle}</p>}
-                        {banner.tag && (
-                          <span className="text-sm font-bold bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-                            {banner.tag}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <div className="absolute bottom-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 group-hover:bg-white group-hover:text-black transition-colors">
-                      <FiChevronRight className="w-5 h-5" />
-                    </div>
-                  </div>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-        </div>
+      ))}
+    </div>
+ 
+</section>
 
 
-        {/* 6. Trending/Featured Products Horizontal List (Bottom categories style) */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-              <FiTag className="text-primary-500" /> Trending Styles
-            </h3>
-            <Link to="/products" className="text-xs font-bold text-primary-600 dark:text-primary-400 hover:underline">
-              View All
-            </Link>
-          </div>
-          
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {loading ? (
-               [1, 2, 3, 4].map(n => (
-                <div key={n} className="w-full">
-                  <Skeleton height={200} className="rounded-2xl" />
-                </div>
-               ))
-            ) : (
-              trendingProducts.slice(0, 4).map((product) => (
-                <Link key={product._id} to={`/product/${product._id}`} className="group bg-white dark:bg-gray-900 rounded-2xl p-2 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
-                  <div className="w-full aspect-[4/5] rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 mb-3 relative">
-                    <img 
-                      src={product.images?.[0]?.url} 
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
-                    />
-                    <div className="absolute bottom-2 left-2 bg-white/90 dark:bg-black/90 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-bold text-gray-900 dark:text-white">
-                      ₹{product.price}
-                    </div>
-                  </div>
-                  <h4 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white line-clamp-1 px-1">
-                    {product.name}
-                  </h4>
-                  <p className="text-[10px] text-gray-500 px-1 mt-0.5 line-clamp-1">{product.category?.name || 'VogueFlow'}</p>
-                </Link>
-              ))
-            )}
-          </div>
-        </div>
+
 
       </div>
 
@@ -257,9 +396,20 @@ const Home = () => {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
+        .dark-section h2 {
+          color: #ffffff !important;
+        }
+        .dark-section p.text-gray-500 {
+          color: #e4e4e7 !important;
+        }
+        .dark-section a.text-primary-600 {
+          color: #f472b6 !important;
+        }
       `}} />
     </div>
   );
 };
 
 export default Home;
+
+

@@ -14,12 +14,12 @@ import {
   FiPackage
 } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
-import { logoutUser } from '../../redux/slices/authSlice';
+import { logoutUser, openAuthModal } from '../../redux/slices/authSlice';
 import { getCategories } from '../../redux/slices/categorySlice';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 
-const Navbar = ({ toggleSidebar }) => {
+const Navbar = () => {
   const [isDark, setIsDark] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -105,19 +105,21 @@ const Navbar = ({ toggleSidebar }) => {
   };
 
   const navLinks = [
+    { name: 'ALL PRODUCTS', path: '/products' },
     { name: 'MEN', path: getCategoryLink('men') },
     { name: 'WOMEN', path: getCategoryLink('women') },
     { name: 'KIDS', path: getCategoryLink('kids') },
     { name: 'HOME & LIVING', path: getCategoryLink('home & living') },
     { name: 'BEAUTY', path: getCategoryLink('beauty') },
     { name: 'STUDIO', path: getCategoryLink('studio'), isNew: true },
+    ...(user ? [{ name: 'ORDERS', path: '/orders/me' }] : []),
   ];
 
   return (
-    <nav className={`w-full transition-all duration-300 ${
+    <nav className={`w-full transition-all duration-300 backdrop-blur-lg border-b border-gray-200/30 dark:border-gray-800/30 ${
         isScrolled
-          ? 'bg-white dark:bg-gray-950 shadow-md'
-          : 'bg-white dark:bg-gray-950 shadow-sm'
+          ? 'bg-white/85 dark:bg-gray-950/85 shadow-md'
+          : 'bg-white/75 dark:bg-gray-950/75 shadow-sm'
       }`}
     >
       <div className="w-full max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8">
@@ -125,17 +127,9 @@ const Navbar = ({ toggleSidebar }) => {
 
           {/* Left: Logo & Menu Links */}
           <div className="flex items-center h-full">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={toggleSidebar}
-              className="lg:hidden p-2 mr-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition flex items-center justify-center border border-transparent"
-            >
-              <FiMenu className="h-6 w-6" />
-            </motion.button>
 
             <Link to="/" className="flex-shrink-0 flex items-center group select-none mr-3 sm:mr-8">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-pink-500 via-red-500 to-orange-400 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-pink-500 rounded-xl flex items-center justify-center shadow-lg">
                 <span className="text-lg sm:text-xl font-black text-white tracking-tight">
                   V
                 </span>
@@ -182,10 +176,17 @@ const Navbar = ({ toggleSidebar }) => {
 
             {/* Profile Dropdown */}
             <div className="relative flex items-center h-full group" ref={profileRef} onMouseEnter={() => setIsProfileOpen(true)} onMouseLeave={() => setIsProfileOpen(false)}>
-              <Link to={user ? "/profile" : "/login"} className="flex flex-col items-center justify-center gap-1 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition group-hover:border-b-4 border-pink-500 h-full pb-1 cursor-pointer">
-                <FiUser className="w-[18px] h-[18px]" />
-                <span className="hidden sm:block text-[12px] font-bold">Profile</span>
-              </Link>
+              {user ? (
+                <Link to="/profile" className="flex flex-col items-center justify-center gap-1 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition group-hover:border-b-4 border-pink-500 h-full pb-1 cursor-pointer">
+                  <FiUser className="w-[18px] h-[18px]" />
+                  <span className="hidden sm:block text-[12px] font-bold">Profile</span>
+                </Link>
+              ) : (
+                <button onClick={() => dispatch(openAuthModal('login'))} className="flex flex-col items-center justify-center gap-1 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition group-hover:border-b-4 border-pink-500 h-full pb-1 cursor-pointer">
+                  <FiUser className="w-[18px] h-[18px]" />
+                  <span className="hidden sm:block text-[12px] font-bold">Profile</span>
+                </button>
+              )}
               
               <AnimatePresence>
                 {isProfileOpen && (
@@ -200,9 +201,9 @@ const Navbar = ({ toggleSidebar }) => {
                       <div className="border-b border-gray-100 dark:border-gray-800 pb-4 mb-2">
                         <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">Welcome</p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">To access account and manage orders</p>
-                        <Link to="/login" className="block text-center border border-gray-200 dark:border-gray-700 text-pink-500 font-bold text-sm py-2.5 hover:border-pink-500 transition">
+                        <button onClick={() => { setIsProfileOpen(false); dispatch(openAuthModal('login')); }} className="w-full block text-center border border-gray-200 dark:border-gray-700 text-pink-500 font-bold text-sm py-2.5 hover:border-pink-500 transition">
                           LOGIN / SIGNUP
-                        </Link>
+                        </button>
                       </div>
                     ) : (
                       <div className="border-b border-gray-100 dark:border-gray-800 pb-3 mb-2">
@@ -248,10 +249,7 @@ const Navbar = ({ toggleSidebar }) => {
               )}
             </Link>
 
-            {/* Theme Toggle (Hidden on Myntra but keeping it for VagueFlow) */}
-            <button onClick={toggleTheme} className="hidden sm:block p-1 ml-2 text-gray-500 hover:text-gray-900 dark:hover:text-white transition">
-              {isDark ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
-            </button>
+
             
           </div>
         </div>
@@ -270,6 +268,26 @@ const Navbar = ({ toggleSidebar }) => {
               />
             </div>
           </form>
+        </div>
+
+        {/* Mobile Navigation Horizontal Scroll List */}
+        <div className="lg:hidden flex items-center gap-2 overflow-x-auto pb-3 pt-1 scrollbar-none no-scrollbar select-none">
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.path || (link.path !== '/' && location.pathname.startsWith(link.path));
+            return (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={`whitespace-nowrap text-[10px] font-black tracking-widest px-3.5 py-1.5 rounded-full transition-all border ${
+                  isActive
+                    ? 'bg-pink-500 text-white border-pink-500 shadow-sm'
+                    : 'bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 border-gray-200/50 dark:border-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-800'
+                }`}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </nav>

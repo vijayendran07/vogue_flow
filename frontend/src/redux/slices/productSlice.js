@@ -3,14 +3,50 @@ import api from '../../services/api';
 
 export const getProducts = createAsyncThunk(
   'products/getProducts',
-  async ({ keyword = '', currentPage = 1, price = [0, 250000], category = '', ratings = 0, sort = 'newest' }, { rejectWithValue }) => {
+  async (
+    {
+      keyword = '',
+      currentPage = 1,
+      limit,
+      price = [0, 250000],
+      category = '',
+      ratings = 0,
+      sort = 'newest',
+      brands = [],
+      colors = [],
+      sizes = [],
+      discount = '',
+      availability = [],
+      materials = [],
+      occasions = [],
+      gender = '',
+      collection = [],
+      fit = '',
+    },
+    { rejectWithValue }
+  ) => {
     try {
-      let link = `/products?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${ratings}&sort=${sort}`;
-      
-      if (category) {
-        link = `/products?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&category=${category}&ratings[gte]=${ratings}&sort=${sort}`;
-      }
+      const params = new URLSearchParams();
+      params.set('keyword', keyword);
+      params.set('page', currentPage);
+      if (limit) params.set('limit', limit);
+      params.set('price[gte]', price[0]);
+      params.set('price[lte]', price[1]);
+      if (category) params.set('category', category);
+      params.set('ratings[gte]', ratings);
+      params.set('sort', sort);
+      if (brands.length) params.set('brands', brands.join(','));
+      if (colors.length) params.set('colors', colors.join(','));
+      if (sizes.length) params.set('sizes', sizes.join(','));
+      if (discount) params.set('discount', discount);
+      if (availability.length) params.set('availability', availability.join(','));
+      if (materials.length) params.set('materials', materials.join(','));
+      if (occasions.length) params.set('occasions', occasions.join(','));
+      if (gender) params.set('gender', gender);
+      if (collection.length) params.set('collection', collection.join(','));
+      if (fit) params.set('fit', fit);
 
+      const link = `/products?${params.toString()}`;
       const { data } = await api.get(link);
       return data;
     } catch (error) {
@@ -142,6 +178,20 @@ export const bulkUpdateProductStatus = createAsyncThunk(
   }
 );
 
+export const newReview = createAsyncThunk(
+  'product/newReview',
+  async (reviewData, { rejectWithValue }) => {
+    try {
+      const { data } = await api.put('/review', reviewData, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      return data.success;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to submit review');
+    }
+  }
+);
+
 const initialState = {
   products: [],
   product: {},
@@ -153,6 +203,7 @@ const initialState = {
   isCreated: false,
   isUpdated: false,
   isDeleted: false,
+  isReviewSubmitted: false,
 };
 
 const productSlice = createSlice({
@@ -166,6 +217,7 @@ const productSlice = createSlice({
       state.isCreated = false;
       state.isUpdated = false;
       state.isDeleted = false;
+      state.isReviewSubmitted = false;
     }
   },
   extraReducers: (builder) => {
@@ -281,6 +333,18 @@ const productSlice = createSlice({
         state.isUpdated = action.payload;
       })
       .addCase(bulkUpdateProductStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // newReview
+      .addCase(newReview.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(newReview.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isReviewSubmitted = action.payload;
+      })
+      .addCase(newReview.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

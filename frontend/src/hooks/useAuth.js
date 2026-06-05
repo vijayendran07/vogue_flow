@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback } from 'react';
-import { logoutUser } from '../redux/slices/authSlice';
+import { logoutUser, openAuthModal } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -16,13 +16,13 @@ export const useAuth = () => {
   const handleLogout = useCallback(() => {
     dispatch(logoutUser());
     toast.success('Logged out successfully');
-    navigate('/login');
+    navigate('/');
   }, [dispatch, navigate]);
 
   const checkAuth = useCallback(() => {
     if (!isAuthenticated) {
       toast.error('Please login to continue');
-      navigate('/login');
+      dispatch(openAuthModal('login'));
       return false;
     }
     return true;
@@ -31,7 +31,7 @@ export const useAuth = () => {
   const requireAuth = useCallback((callback) => {
     if (!isAuthenticated) {
       toast.error('Please login to continue');
-      navigate('/login');
+      dispatch(openAuthModal('login'));
       return;
     }
     callback();

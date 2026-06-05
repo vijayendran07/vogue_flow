@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -9,22 +10,31 @@ import {
   FiPackage,
   FiLogOut,
   FiShoppingCart,
-  FiLayout
 } from 'react-icons/fi';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { logoutUser } from '../../redux/slices/authSlice';
+import { logoutUser, openAuthModal } from '../../redux/slices/authSlice';
 import { toast } from 'react-toastify';
 
-const Sidebar = ({ isOpen, toggleSidebar }) => {
+const Sidebar = ({
+  isOpen,
+  toggleSidebar,
+  isDesktopCollapsed,
+  toggleDesktopSidebar,
+}) => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-  const [isDesktop, setIsDesktop] = useState(
-    typeof window !== 'undefined' ? window.innerWidth >= 1024 : false
-  );
-  const [isHovered, setIsHovered] = useState(false);
 
-  const isCollapsed = isDesktop && !isHovered;
+  const { user } = useSelector((state) => state.auth);
+
+  const [isDesktop, setIsDesktop] = useState(
+    typeof window !== 'undefined'
+      ? window.innerWidth >= 1024
+      : false
+  );
+
+  const isCollapsed =
+    isDesktop && isDesktopCollapsed;
 
   useEffect(() => {
     const handleResize = () => {
@@ -32,24 +42,58 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     };
 
     handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    window.addEventListener(
+      'resize',
+      handleResize
+    );
+
+    return () =>
+      window.removeEventListener(
+        'resize',
+        handleResize
+      );
   }, []);
 
   const handleLogout = () => {
     dispatch(logoutUser());
+
     toast.success('Logged out successfully');
+
     if (!isDesktop) toggleSidebar();
   };
 
   const navItems = [
-    { name: 'Home', path: '/', icon: FiHome },
-    { name: 'Products', path: '/products', icon: FiGrid },
-    { name: 'Cart', path: '/cart', icon: FiShoppingCart },
-    { name: 'Wishlist', path: '/wishlist', icon: FiHeart },
-    { name: 'Profile', path: '/profile', icon: FiUser },
-    { name: 'Orders', path: '/orders/me', icon: FiPackage },
-    { name: 'Dashboard', path: '/dashboard', icon: FiLayout },
+    {
+      name: 'Home',
+      path: '/',
+      icon: FiHome,
+    },
+    {
+      name: 'Products',
+      path: '/products',
+      icon: FiGrid,
+    },
+    {
+      name: 'Cart',
+      path: '/cart',
+      icon: FiShoppingCart,
+    },
+    {
+      name: 'Wishlist',
+      path: '/wishlist',
+      icon: FiHeart,
+    },
+    {
+      name: 'Profile',
+      path: '/profile',
+      icon: FiUser,
+    },
+    {
+      name: 'Orders',
+      path: '/orders/me',
+      icon: FiPackage,
+    },
   ];
 
   const sidebarVariants = {
@@ -57,44 +101,46 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       width: 72,
       transition: {
         duration: 0.3,
-        ease: 'easeInOut'
-      }
+        ease: 'easeInOut',
+      },
     },
+
     expanded: {
       width: 240,
       transition: {
         duration: 0.3,
-        ease: 'easeInOut'
-      }
+        ease: 'easeInOut',
+      },
     },
+
     closed: {
       x: '-100%',
       transition: {
         type: 'spring',
         stiffness: 300,
-        damping: 30
-      }
+        damping: 30,
+      },
     },
+
     visible: {
       x: 0,
       width: '100%',
       transition: {
         type: 'spring',
         stiffness: 300,
-        damping: 30
-      }
-    }
+        damping: 30,
+      },
+    },
   };
 
   const overlayVariants = {
     closed: { opacity: 0 },
-    open: { opacity: 1 }
+    open: { opacity: 1 },
   };
-
 
   return (
     <>
-      {/* Mobile overlay */}
+      {/* Mobile Overlay */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -113,96 +159,267 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         initial={false}
         animate={
           isDesktop
-            ? (isHovered ? 'expanded' : 'collapsed')
-            : (isOpen ? 'visible' : 'closed')
+            ? isDesktopCollapsed
+              ? 'collapsed'
+              : 'expanded'
+            : isOpen
+            ? 'visible'
+            : 'closed'
         }
         variants={sidebarVariants}
-        onMouseEnter={() => isDesktop && setIsHovered(true)}
-        onMouseLeave={() => isDesktop && setIsHovered(false)}
         className="fixed inset-y-0 left-0 z-40 h-screen bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-r border-white/20 dark:border-gray-800/40 shadow-sm overflow-hidden"
       >
-        <div className="flex flex-col h-full pt-20">
+
+        {/* Mobile Close Button */}
+        {!isDesktop && (
+          <div className="absolute top-4 right-3 z-50">
+            <button
+              onClick={toggleSidebar}
+              className="p-2 rounded-xl text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white bg-white/70 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-700"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+        <div className="flex flex-col h-full">
+
+          {/* Logo Header */}
+          <div
+            className={`relative flex items-center border-b border-gray-200/60 dark:border-gray-800/60 transition-all duration-300 ${
+              isCollapsed
+                ? 'justify-center h-20 px-2'
+                : 'justify-between h-20 px-5'
+            }`}
+          >
+
+            {/* Logo */}
+            <AnimatePresence mode="wait">
+              {!isCollapsed && (
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    x: -15,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    x: -15,
+                  }}
+                  transition={{
+                    duration: 0.2,
+                  }}
+                  className="flex flex-col"
+                >
+                  <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white leading-none">
+                    VAGUEFLOW
+                  </h1>
+
+                  <span className="text-[10px] uppercase tracking-[4px] font-bold text-gray-400 dark:text-gray-500 mt-1">
+                    Premium Fashion
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Desktop Toggle */}
+            {isDesktop && (
+              <button
+                onClick={toggleDesktopSidebar}
+                className={`absolute top-1/2 -translate-y-1/2 transition-all duration-300
+                  
+                  ${
+                    isCollapsed
+                      ? 'right-3'
+                      : '-right-4'
+                  }
+
+                  z-50 p-2 rounded-xl bg-white dark:bg-gray-900
+                  border border-gray-200 dark:border-gray-700
+                  shadow-lg hover:scale-105
+                  text-gray-600 dark:text-gray-300
+                  hover:text-gray-900 dark:hover:text-white
+                `}
+              >
+                {isDesktopCollapsed ? (
+                  <ChevronRight className="w-4 h-4" />
+                ) : (
+                  <ChevronLeft className="w-4 h-4" />
+                )}
+              </button>
+            )}
+          </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
-            {navItems.map((item, index) => {
-              const isActive = location.pathname === item.path ||
-                (item.path !== '/' && location.pathname.startsWith(item.path));
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={item.name}
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  whileHover={{ y: -1, scale: 1.01 }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <Link
-                    to={item.path}
-                    onClick={!isDesktop ? toggleSidebar : undefined}
-                    className={`group flex items-center px-4 py-3 text-sm font-semibold rounded-full transition-all duration-300 ${
-                      isActive
-                        ? 'bg-gray-950/95 text-white'
-                        : 'text-gray-600 hover:bg-gray-100/80 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white'
-                    }`}
+          <nav
+            className={`flex-1 py-6 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent ${
+              isCollapsed
+                ? 'px-2'
+                : 'px-4'
+            }`}
+          >
+            {navItems.map(
+              (item, index) => {
+                const isActive =
+                  location.pathname ===
+                    item.path ||
+                  (item.path !== '/' &&
+                    location.pathname.startsWith(
+                      item.path
+                    ));
+
+                const Icon = item.icon;
+
+                return (
+                  <motion.div
+                    key={item.name}
+                    initial={{
+                      x: -20,
+                      opacity: 0,
+                    }}
+                    animate={{
+                      x: 0,
+                      opacity: 1,
+                    }}
+                    whileHover={{
+                      y: -1,
+                      scale: 1.01,
+                    }}
+                    transition={{
+                      delay:
+                        index * 0.05,
+                    }}
                   >
-                    <div
-                      className={`flex-shrink-0 inline-flex items-center justify-center h-10 w-10 rounded-2xl transition-all duration-200 ${
+                    <Link
+                      to={item.path}
+                      onClick={
+                        !isDesktop
+                          ? toggleSidebar
+                          : undefined
+                      }
+                      className={`group text-sm font-semibold rounded-2xl transition-all duration-300 ${
+                        isCollapsed
+                          ? 'flex justify-center items-center h-12 w-full px-0 py-0'
+                          : 'flex items-center gap-3 px-3 py-2.5'
+                      } ${
                         isActive
-                          ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-950'
-                          : 'bg-gray-100/70 text-gray-500 dark:bg-gray-900/70 dark:text-gray-400 group-hover:bg-gray-200/80 dark:group-hover:bg-white/10 group-hover:text-gray-900 dark:group-hover:text-white'
+                          ? 'bg-gray-950/95 text-white'
+                          : 'text-gray-600 hover:bg-gray-100/80 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white'
                       }`}
                     >
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <span className={`ml-3 text-sm font-semibold transition-all duration-300 ${
-                      isCollapsed
-                        ? 'max-w-0 opacity-0 overflow-hidden'
-                        : 'max-w-[140px] opacity-100'
-                    }`}>{item.name}</span>
-                  </Link>
-                </motion.div>
-              );
-            })}
+                      <div
+                        className={`flex-shrink-0 inline-flex items-center justify-center h-9 w-9 rounded-xl ${
+                          isCollapsed
+                            ? 'mx-auto'
+                            : ''
+                        }`}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </div>
+
+                      <span
+                        className={`text-sm font-semibold transition-all duration-300 ${
+                          isCollapsed
+                            ? 'hidden'
+                            : 'ml-3 max-w-[140px] opacity-100'
+                        }`}
+                      >
+                        {item.name}
+                      </span>
+                    </Link>
+                  </motion.div>
+                );
+              }
+            )}
           </nav>
 
           {/* Logout */}
           {user && (
-            <div className="px-4 pb-6 mt-auto">
+            <div
+              className={`${
+                isCollapsed
+                  ? 'px-2'
+                  : 'px-4'
+              } pb-6 mt-auto`}
+            >
               <motion.button
-                whileHover={{ y: -1, scale: 1.01 }}
+                whileHover={{
+                  y: -1,
+                  scale: 1.01,
+                }}
                 onClick={handleLogout}
-                className="group flex items-center w-full px-4 py-3 text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-500/10 hover:text-red-700 dark:hover:text-red-300 rounded-full transition-all duration-300"
+                className={`group w-full text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-500/10 hover:text-red-700 dark:hover:text-red-300 rounded-2xl transition-all duration-300 ${
+                  isCollapsed
+                    ? 'flex justify-center items-center h-12 px-0 py-0'
+                    : 'flex items-center gap-3 px-3 py-2.5'
+                }`}
               >
-                <div className="flex-shrink-0 inline-flex items-center justify-center h-10 w-10 rounded-2xl bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 transition-all duration-200 group-hover:bg-red-100 dark:hover:bg-red-500/20">
+                <div
+                  className={`flex-shrink-0 inline-flex items-center justify-center h-9 w-9 rounded-xl ${
+                    isCollapsed
+                      ? 'mx-auto'
+                      : ''
+                  }`}
+                >
                   <FiLogOut className="h-5 w-5" />
                 </div>
-                <span className={`ml-3 transition-all duration-300 ${isCollapsed ? 'max-w-0 opacity-0 overflow-hidden' : 'max-w-[140px] opacity-100'}`}>
+
+                <span
+                  className={`transition-all duration-300 ${
+                    isCollapsed
+                      ? 'hidden'
+                      : 'ml-3 max-w-[140px] opacity-100'
+                  }`}
+                >
                   Logout
                 </span>
               </motion.button>
             </div>
           )}
 
-          {/* Auth Links (if not logged in) */}
+          {/* Auth */}
           {!user && (
-            <div className="px-4 pb-6">
-              <motion.div
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: navItems.length * 0.05 }}
+            <div
+              className={`${
+                isCollapsed
+                  ? 'px-2'
+                  : 'px-4'
+              } pb-6`}
+            >
+              <button
+                onClick={() => {
+                  if (!isDesktop) toggleSidebar();
+                  dispatch(openAuthModal('login'));
+                }}
+                className={`group w-full text-sm font-semibold text-primary-600 dark:text-primary-400 hover:bg-primary-500/10 rounded-2xl transition-all duration-200 ${
+                  isCollapsed
+                    ? 'flex justify-center items-center h-12 w-full px-0 py-0'
+                    : 'flex items-center gap-3 px-3 py-2.5'
+                }`}
               >
-                <Link
-                  to="/login"
-                  onClick={!isDesktop ? toggleSidebar : undefined}
-                  className="group flex items-center px-4 py-3 text-sm font-semibold text-primary-600 dark:text-primary-400 hover:bg-primary-500/10 rounded-3xl transition-all duration-200"
+                <div
+                  className={`flex-shrink-0 inline-flex items-center justify-center h-9 w-9 rounded-xl ${
+                    isCollapsed
+                      ? 'mx-auto'
+                      : ''
+                  }`}
                 >
-                  <div className="flex-shrink-0 inline-flex items-center justify-center h-10 w-10 rounded-2xl bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 transition-all duration-200 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/30">
-                    <FiUser className="h-5 w-5" />
-                  </div>
-                  <span className="ml-3">Sign In</span>
-                </Link>
-              </motion.div>
+                  <FiUser className="h-5 w-5" />
+                </div>
+
+                <span
+                  className={`${
+                    isCollapsed
+                      ? 'hidden'
+                      : 'ml-3'
+                  }`}
+                >
+                  Sign In
+                </span>
+              </button>
             </div>
           )}
         </div>

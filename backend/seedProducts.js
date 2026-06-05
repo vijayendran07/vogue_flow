@@ -347,24 +347,29 @@ const seedDatabase = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Database connected successfully!');
 
-    // 1. Ensure the default Admin user admin@vagueflow.com exists with password123 and role admin
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@vagueflow.com';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'password123';
+    const adminName = process.env.ADMIN_NAME || 'VagueFlow Admin';
+    const adminPhone = process.env.ADMIN_PHONE || '9876543210';
+
+    // 1. Ensure the default Admin user exists and has admin role
     console.log('Seeding default Admin user...');
-    let adminUser = await User.findOne({ email: 'admin@vagueflow.com' });
+    let adminUser = await User.findOne({ email: adminEmail });
     if (!adminUser) {
       adminUser = await User.create({
-        name: 'VagueFlow Admin',
-        email: 'admin@vagueflow.com',
-        password: 'password123', // Will be hashed via pre-save hook
-        phone: '9876543210',
+        name: adminName,
+        email: adminEmail,
+        password: adminPassword, // Will be hashed via pre-save hook
+        phone: adminPhone,
         role: 'admin',
         emailVerified: true
       });
-      console.log('Admin user created successfully: admin@vagueflow.com / password123');
+      console.log(`Admin user created successfully: ${adminEmail} / ${adminPassword}`);
     } else {
       adminUser.role = 'admin';
-      adminUser.password = 'password123'; // Overwrite password to make sure it's correct
+      adminUser.password = adminPassword; // Overwrite password to make sure it's correct
       await adminUser.save();
-      console.log('Admin user verified: admin@vagueflow.com / password123');
+      console.log(`Admin user verified: ${adminEmail} / ${adminPassword}`);
     }
 
     // 2. Clear Categories and Products

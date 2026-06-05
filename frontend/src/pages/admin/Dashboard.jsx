@@ -33,7 +33,7 @@ const StatCard = ({ title, value, icon: Icon, colorClass, bgClass, trend }) => (
         whileHover={{ y: -6, scale: 1.01 }}
         className="bg-white/40 dark:bg-black/30 border border-white/20 dark:border-white/10 shadow-xl backdrop-blur-xl rounded-[32px] p-6 hover:shadow-2xl transition-all duration-300 relative overflow-hidden group"
     >
-        <div className="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 rounded-full bg-gradient-to-br from-white/20 to-transparent dark:from-white/5 opacity-50 transform group-hover:scale-150 transition-transform duration-700"></div>
+        <div className="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 rounded-full bg-white/10 dark:bg-white/5 opacity-50 transform group-hover:scale-150 transition-transform duration-700"></div>
         <div className="flex items-center justify-between relative z-10">
             <div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 font-extrabold uppercase tracking-wider mb-1.5">{title}</p>
@@ -259,19 +259,19 @@ const AdminDashboard = () => {
                     {/* 8-Grid Stats Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                         <StatCard title="Total Revenue" value={formatCurrency(data.totalSales)} icon={FiDollarSign} colorClass="text-blue-600 dark:text-blue-400" bgClass="bg-blue-100/60 dark:bg-blue-900/20" trend="+12.5%" />
-                        <StatCard title="Total Orders" value={data.totalOrders} icon={FiShoppingCart} colorClass="text-green-600 dark:text-green-400" bgClass="bg-green-100/60 dark:bg-green-900/20" trend="+8.2%" />
-                        <StatCard title="Total Products" value={data.totalProducts} icon={FiBox} colorClass="text-purple-600 dark:text-purple-400" bgClass="bg-purple-100/60 dark:bg-purple-900/20" />
-                        <StatCard title="Total Users" value={data.totalUsers} icon={FiUsers} colorClass="text-indigo-600 dark:text-indigo-400" bgClass="bg-indigo-100/60 dark:bg-indigo-900/20" trend="+5.4%" />
+                        <StatCard title="Total Orders" value={data.totalOrders} icon={FiShoppingCart} colorClass="text-blue-600 dark:text-blue-400" bgClass="bg-blue-100/60 dark:bg-blue-900/20" trend="+8.2%" />
+                        <StatCard title="Total Products" value={data.totalProducts} icon={FiBox} colorClass="text-blue-600 dark:text-blue-400" bgClass="bg-blue-100/60 dark:bg-blue-900/20" />
+                        <StatCard title="Total Users" value={data.totalUsers} icon={FiUsers} colorClass="text-blue-600 dark:text-blue-400" bgClass="bg-blue-100/60 dark:bg-blue-900/20" trend="+5.4%" />
                         
-                        <StatCard title="Pending Orders" value={data.pendingOrders} icon={FiClock} colorClass="text-yellow-600 dark:text-yellow-400" bgClass="bg-yellow-100/60 dark:bg-yellow-900/20" />
-                        <StatCard title="Delivered Orders" value={data.deliveredOrders} icon={FiCheckCircle} colorClass="text-emerald-600 dark:text-emerald-400" bgClass="bg-emerald-100/60 dark:bg-emerald-900/20" />
-                        <StatCard title="Out of Stock" value={data.outOfStockProducts} icon={FiAlertTriangle} colorClass="text-red-600 dark:text-red-400" bgClass="bg-red-100/60 dark:bg-red-900/20" />
-                        <StatCard title="Categories" value={data.totalCategories} icon={FiLayers} colorClass="text-pink-600 dark:text-pink-400" bgClass="bg-pink-100/60 dark:bg-pink-900/20" />
+                        <StatCard title="Pending Orders" value={data.pendingOrders} icon={FiClock} colorClass="text-blue-600 dark:text-blue-400" bgClass="bg-blue-100/60 dark:bg-blue-900/20" />
+                        <StatCard title="Delivered Orders" value={data.deliveredOrders} icon={FiCheckCircle} colorClass="text-blue-600 dark:text-blue-400" bgClass="bg-blue-100/60 dark:bg-blue-900/20" />
+                        <StatCard title="Out of Stock" value={data.outOfStockProducts} icon={FiAlertTriangle} colorClass="text-blue-600 dark:text-blue-400" bgClass="bg-blue-100/60 dark:bg-blue-900/20" />
+                        <StatCard title="Categories" value={data.totalCategories} icon={FiLayers} colorClass="text-blue-600 dark:text-blue-400" bgClass="bg-blue-100/60 dark:bg-blue-900/20" />
                     </div>
 
                     {/* Quick Actions */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                        <Link to="/admin/product/new" className="flex items-center justify-center space-x-2 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-500 hover:to-indigo-500 text-white p-4.5 rounded-2xl shadow-xl transition-all duration-300 group">
+                        <Link to="/admin/product/new" className="flex items-center justify-center space-x-2 bg-pink-500 hover:bg-pink-600 text-white p-4.5 rounded-2xl shadow-xl transition-all duration-300 group">
                             <FiPlus className="group-hover:scale-110 transition-transform" /> <span className="font-bold text-xs uppercase tracking-wider">Add Product</span>
                         </Link>
                         <Link to="/admin/categories" className="flex items-center justify-center space-x-2 bg-white/40 dark:bg-black/35 backdrop-blur-xl hover:bg-white/50 dark:hover:bg-black/45 border border-white/20 dark:border-white/10 text-gray-800 dark:text-gray-200 p-4.5 rounded-2xl shadow-lg transition-all duration-300">
@@ -295,12 +295,6 @@ const AdminDashboard = () => {
                             <div className="h-80 w-full">
                                 <ResponsiveContainer width="99%" height={320}>
                                     <AreaChart data={data.monthlySalesData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                                        <defs>
-                                            <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3}/>
-                                                <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
-                                            </linearGradient>
-                                        </defs>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#374151" opacity={0.15} />
                                         <XAxis dataKey="month" stroke="#9CA3AF" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 'bold' }} />
                                         <YAxis stroke="#9CA3AF" axisLine={false} tickLine={false} tickFormatter={(value) => `₹${value >= 1000 ? (value/1000)+'k' : value}`} tick={{ fontSize: 10, fontWeight: 'bold' }} />
@@ -308,7 +302,7 @@ const AdminDashboard = () => {
                                             contentStyle={{ backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', boxShadow: '0 10px 25px rgba(0,0,0,0.3)' }}
                                             formatter={(value) => [formatCurrency(value), "Revenue"]}
                                         />
-                                        <Area type="monotone" dataKey="sales" stroke="#3B82F6" strokeWidth={3} fillOpacity={1} fill="url(#colorSales)" />
+                                        <Area type="monotone" dataKey="sales" stroke="#3B82F6" strokeWidth={3} fill="#3B82F6" fillOpacity={0.1} />
                                     </AreaChart>
                                 </ResponsiveContainer>
                             </div>

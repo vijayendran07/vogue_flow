@@ -9,7 +9,8 @@ import {
   ShoppingCart,
   Users,
   LogOut,
-  Menu,
+  ChevronLeft,
+  ChevronRight,
   X,
   Image,
   Ticket
@@ -17,8 +18,7 @@ import {
 import { logoutUser } from '../../redux/slices/authSlice';
 import { toast } from 'react-toastify';
 
-const AdminSidebar = ({ isOpen, toggleSidebar }) => {
-  const [isHovered, setIsHovered] = useState(false);
+const AdminSidebar = ({ isOpen, toggleSidebar, isDesktopCollapsed, toggleDesktopSidebar }) => {
   const [isMobile, setIsMobile] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
     try {
       await dispatch(logoutUser()).unwrap();
       toast.success('Logged out successfully');
-      navigate('/login');
+      navigate('/');
     } catch {
       toast.error('Logout failed');
     }
@@ -70,7 +70,7 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
     },
   };
 
-  const isExpanded = isMobile ? isOpen : isHovered;
+  const isExpanded = isMobile ? isOpen : !isDesktopCollapsed;
 
   return (
     <>
@@ -90,12 +90,10 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
       {/* Sidebar */}
       <motion.div
         className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-gray-900/95 backdrop-blur-xl border-r border-gray-700/50 shadow-2xl ${
-          isMobile ? (isOpen ? 'translate-x-0' : '-translate-x-full') : 'md:relative md:z-auto md:translate-x-0'
+          isMobile ? (isOpen ? 'translate-x-0' : '-translate-x-full') : ''
         }`}
         variants={sidebarVariants}
         animate={isExpanded ? 'expanded' : 'collapsed'}
-        onMouseEnter={() => !isMobile && setIsHovered(true)}
-        onMouseLeave={() => !isMobile && setIsHovered(false)}
         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
       >
         {/* Header */}
@@ -109,7 +107,7 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
             }}
             transition={{ duration: 0.2 }}
           >
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <LayoutDashboard className="w-5 h-5 text-white" />
             </div>
             <span className="text-lg font-bold text-white">Admin Panel</span>
@@ -125,10 +123,14 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
             </button>
           )}
 
-          {/* Desktop Menu Toggle */}
+          {/* Desktop Arrow Toggle */}
           {!isMobile && (
-            <button className="text-gray-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-gray-800">
-              <Menu className="w-5 h-5" />
+            <button
+              onClick={toggleDesktopSidebar}
+              className="text-gray-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-gray-800"
+              title={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
+            >
+              {isExpanded ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
             </button>
           )}
         </div>
@@ -147,7 +149,7 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
                 className={({ isActive }) =>
                   `group relative flex items-center px-3 py-3 rounded-xl transition-all duration-200 ${
                     isActive
-                      ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border-l-4 border-blue-500 shadow-lg shadow-blue-500/20'
+                      ? 'bg-blue-900/40 text-white border-l-4 border-blue-500 shadow-lg shadow-blue-500/20'
                       : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
                   }`
                 }
@@ -171,7 +173,7 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
                     </AnimatePresence>
                     {isActive && (
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl"
+                        className="absolute inset-0 bg-blue-500/10 rounded-xl"
                         layoutId="activeBackground"
                         transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                       />

@@ -4,6 +4,8 @@ const ErrorHandler = require('../utils/errorhander');
 const catchAsyncErrors = require('../middleware/catchAsyncErrors');
 const mongoose = require('mongoose');
 
+const escapeRegex = (value = '') => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 const buildAdminOrderQuery = (queryParams) => {
     const query = {};
 
@@ -121,21 +123,47 @@ exports.getAllOrders = catchAsyncErrors(async (req, res, next) => {
 
     if (req.query.keyword) {
         const keyword = req.query.keyword.trim();
+        const safeKeyword = escapeRegex(keyword);
         const orQuery = [
-            { paymentMethod: new RegExp(keyword, 'i') },
-            { paymentStatus: new RegExp(keyword, 'i') },
-            { courier: new RegExp(keyword, 'i') },
-            { trackingNumber: new RegExp(keyword, 'i') },
-            { orderStatus: new RegExp(keyword, 'i') },
+            { paymentMethod: new RegExp(safeKeyword, 'i') },
+            { paymentStatus: new RegExp(safeKeyword, 'i') },
+            { courier: new RegExp(safeKeyword, 'i') },
+            { trackingNumber: new RegExp(safeKeyword, 'i') },
+            { orderStatus: new RegExp(safeKeyword, 'i') },
+            { invoiceNumber: new RegExp(safeKeyword, 'i') },
+            { 'paymentInfo.id': new RegExp(safeKeyword, 'i') },
         ];
 
         if (mongoose.Types.ObjectId.isValid(keyword)) {
             orQuery.push({ _id: keyword });
         }
 
+        // Support searching by partial Order ID shown in admin table (e.g. last 8 chars)
+        if (keyword.length >= 4) {
+            const idMatches = await Order.aggregate([
+                {
+                    $match: {
+                        $expr: {
+                            $regexMatch: {
+                                input: { $toString: '$_id' },
+                                regex: safeKeyword,
+                                options: 'i',
+                            },
+                        },
+                    },
+                },
+                { $project: { _id: 1 } },
+                { $limit: 100 },
+            ]);
+
+            if (idMatches.length > 0) {
+                orQuery.push({ _id: { $in: idMatches.map((doc) => doc._id) } });
+            }
+        }
+
         // Support searching orders by Customer Name
         const User = require('../models/userModel');
-        const matchedUsers = await User.find({ name: new RegExp(keyword, 'i') }).select('_id');
+        const matchedUsers = await User.find({ name: new RegExp(safeKeyword, 'i') }).select('_id');
         if (matchedUsers && matchedUsers.length > 0) {
             orQuery.push({ user: { $in: matchedUsers.map(u => u._id) } });
         }

@@ -5,6 +5,7 @@ const {
     applyCoupon,
     createCoupon,
     getAllCoupons,
+    getActiveCoupons,
     deleteCoupon,
     toggleCouponActive,
 } = require('../controllers/cartController');
@@ -15,6 +16,7 @@ const router = express.Router();
 router.route('/cart/update').put(isAuthenticatedUser, updateCart);
 router.route('/cart').get(isAuthenticatedUser, getCart);
 router.route('/coupon/apply').post(applyCoupon);
+router.route('/coupons').get(getActiveCoupons);
 
 // Admin
 router.route('/admin/coupon/new').post(isAuthenticatedUser, authorizeRoles('admin'), createCoupon);

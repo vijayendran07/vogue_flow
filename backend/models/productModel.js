@@ -46,9 +46,13 @@ const productSchema = new mongoose.Schema({
         required: [true, 'Please enter product description']
     },
     category: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Category',
-        required: [true, 'Please select a product category']
+        type: [
+            {
+                type: mongoose.Schema.ObjectId,
+                ref: 'Category'
+            }
+        ],
+        required: [true, 'Please select at least one product category']
     },
     brand: {
         type: String,
@@ -151,5 +155,11 @@ const productSchema = new mongoose.Schema({
         required: true
     }
 }, { timestamps: true });
+
+productSchema.index({ deleted: 1, status: 1 });
+productSchema.index({ category: 1 });
+productSchema.index({ price: 1 });
+productSchema.index({ ratings: -1 });
+productSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model('Product', productSchema);

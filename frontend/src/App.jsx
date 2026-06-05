@@ -11,6 +11,7 @@ import { getWishlistFromDB } from './redux/slices/wishlistSlice';
 import { getDBCart } from './redux/slices/cartSlice';
 
 import { HelmetProvider } from 'react-helmet-async';
+import AuthModal from './components/auth/AuthModal';
 
 function App() {
   useEffect(() => {
@@ -27,6 +28,7 @@ function App() {
     <Provider store={store}>
       <HelmetProvider>
         <BrowserRouter>
+          <AuthModal />
           <AppRoutes />
           <ToastContainer 
             position="bottom-right"

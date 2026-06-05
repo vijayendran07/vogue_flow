@@ -6,9 +6,13 @@ const ErrorHandler = require('../utils/errorhander');
 
 // Create Razorpay Order
 exports.createRazorpayOrder = catchAsyncErrors(async (req, res, next) => {
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+        return next(new ErrorHandler('Razorpay credentials are missing in backend .env', 500));
+    }
+
     const razorpay = new Razorpay({
-        key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_mock_id',
-        key_secret: process.env.RAZORPAY_KEY_SECRET || 'mock_secret'
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET
     });
 
     const { 
@@ -65,14 +69,19 @@ exports.createRazorpayOrder = catchAsyncErrors(async (req, res, next) => {
         });
     } catch (error) {
         console.error("Razorpay Order Creation Error:", error);
-        return next(new ErrorHandler("Razorpay order creation failed", 500));
+        const message = error?.error?.description || error?.description || 'Razorpay order creation failed';
+        return next(new ErrorHandler(message, 500));
     }
 });
 
 // Verify Razorpay Signature
 exports.verifyRazorpayPayment = catchAsyncErrors(async (req, res, next) => {
     const { razorpay_payment_id, razorpay_order_id, razorpay_signature, orderId } = req.body;
-    const key_secret = process.env.RAZORPAY_KEY_SECRET || 'mock_secret';
+
+    if (!process.env.RAZORPAY_KEY_SECRET) {
+        return next(new ErrorHandler('Razorpay key secret is missing in backend .env', 500));
+    }
+    const key_secret = process.env.RAZORPAY_KEY_SECRET;
 
     const hmac = crypto.createHmac('sha256', key_secret);
     hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
@@ -109,5 +118,8 @@ exports.verifyRazorpayPayment = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.sendRazorpayKeyId = catchAsyncErrors(async (req, res, next) => {
-    res.status(200).json({ razorpayKeyId: process.env.RAZORPAY_KEY_ID || 'rzp_test_mock_id' });
+    if (!process.env.RAZORPAY_KEY_ID) {
+        return next(new ErrorHandler('Razorpay key id is missing in backend .env', 500));
+    }
+    res.status(200).json({ razorpayKeyId: process.env.RAZORPAY_KEY_ID });
 });

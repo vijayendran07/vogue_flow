@@ -8,13 +8,9 @@ import AuthLayout from '../layouts/AuthLayout';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 const Home = lazy(() => import('../pages/Home'));
-const Login = lazy(() => import('../pages/Login'));
 const GoogleCallback = lazy(() => import('../pages/GoogleCallback'));
-const AdminLogin = lazy(() => import('../pages/AdminLogin'));
-const Register = lazy(() => import('../pages/Register'));
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('../pages/ResetPassword'));
-const Dashboard = lazy(() => import('../pages/Dashboard'));
 const Profile = lazy(() => import('../pages/Profile'));
 const Products = lazy(() => import('../pages/Products'));
 const ProductDetails = lazy(() => import('../pages/ProductDetails'));
@@ -39,6 +35,10 @@ const EditProduct = lazy(() => import('../pages/admin/EditProduct'));
 const ViewProduct = lazy(() => import('../pages/admin/ViewProduct'));
 const UserList = lazy(() => import('../pages/admin/UserList'));
 const UserDetails = lazy(() => import('../pages/admin/UserDetails'));
+const Faq = lazy(() => import('../pages/Faq'));
+const PrivacyPolicy = lazy(() => import('../pages/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('../pages/TermsOfService'));
+const CookiePolicy = lazy(() => import('../pages/CookiePolicy'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
 const PremiumLoaderSkeleton = () => (
@@ -81,10 +81,7 @@ const AppRoutes = () => {
         <Routes>
           {/* Public Auth Routes */}
           <Route element={<AuthLayout />}>
-            <Route path="/login" element={<Login />} />
             <Route path="/auth/google/callback" element={<GoogleCallback />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/register" element={<Register />} />
             <Route path="/password/forgot" element={<ForgotPassword />} />
             <Route path="/password/reset/:token" element={<ResetPassword />} />
           </Route>
@@ -96,6 +93,10 @@ const AppRoutes = () => {
             <Route path="product/:id" element={<ProductDetails />} />
             <Route path="categories" element={<Categories />} />
             <Route path="cart" element={<Cart />} />
+            <Route path="faq" element={<Faq />} />
+            <Route path="privacy" element={<PrivacyPolicy />} />
+            <Route path="terms" element={<TermsOfService />} />
+            <Route path="cookies" element={<CookiePolicy />} />
             
             {/* Protected User Routes (Require Authentication) */}
             <Route element={<ProtectedRoute />}>
@@ -104,7 +105,6 @@ const AppRoutes = () => {
               <Route path="/order-success" element={<OrderSuccess />} />
               <Route path="/orders/me" element={<MyOrders />} />
               <Route path="/order/:id" element={<OrderDetails />} />
-              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
             </Route>

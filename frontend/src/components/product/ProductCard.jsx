@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '../../utils/formatCurrency';
 import Rating from '../common/Rating';
-import { FiHeart, FiShoppingCart } from 'react-icons/fi';
+import { FiHeart, FiShoppingCart, FiShoppingBag } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToWishlistThunk, removeFromWishlistThunk } from '../../redux/slices/wishlistSlice';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
+import { addToCart } from '../../redux/slices/cartSlice';
+import { optimizeUnsplashUrl } from '../../utils/imageOptimizer';
 
-const ProductCard = React.memo(({ product }) => {
+const ProductCard = React.memo(({ product, isHome }) => {
   if (!product) return null;
 
   const dispatch = useDispatch();
@@ -31,6 +33,24 @@ const ProductCard = React.memo(({ product }) => {
       dispatch(addToWishlistThunk(product));
       toast.success("Added to wishlist");
     }
+  };
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (product.stock === 0) {
+      toast.error("Product is out of stock!");
+      return;
+    }
+    dispatch(addToCart({
+      product: product._id,
+      name: product.name,
+      price: product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price,
+      image: product.images && product.images[0]?.url ? product.images[0].url : '',
+      stock: product.stock,
+      quantity: 1
+    }));
+    toast.success("Added to bag!");
   };
 
   // Animation variants
@@ -72,164 +92,192 @@ const ProductCard = React.memo(({ product }) => {
     hover: { opacity: 1, transition: { duration: 0.25 } },
   };
 
+  if (isHome) {
+    const brandName = product.brand || 'VOGUEFLOW';
+    
+    const getPromoOffer = () => {
+      const percentage = discountPercentage > 0 ? discountPercentage : 35;
+      const prefixes = ['Up to', 'Min', 'Flat'];
+      const prefix = prefixes[product.name.charCodeAt(0) % prefixes.length];
+      return `${prefix} ${percentage}% off`;
+    };
+
+    const getPromoSubtitle = () => {
+      const catName = (product.category?.name || 'fashion').toLowerCase();
+      if (catName.includes('men')) return 'Bestselling activewear';
+      if (catName.includes('women')) return 'Stylish & elegant dresses';
+      if (catName.includes('kids')) return 'Fun & cozy kidswear';
+      if (catName.includes('home')) return 'Modern home essentials';
+      if (catName.includes('beauty')) return 'Premium beauty care';
+      return 'Trendiest global styles';
+    };
+
+    return (
+      <motion.div
+        variants={cardVariants}
+        initial="initial"
+        animate="animate"
+        whileHover="hover"
+        variants={hoverVariants}
+        className="h-full block"
+        onMouseEnter={() => setIsCardHovered(true)}
+        onMouseLeave={() => setIsCardHovered(false)}
+      >
+        <Tilt
+          tiltMaxAngleX={5}
+          tiltMaxAngleY={5}
+          scale={isCardHovered ? 1.01 : 1}
+          transitionSpeed={400}
+          perspective={1000}
+          className="h-full block"
+        >
+          <Link
+            to={`/product/${product._id}`}
+            aria-label={`View details for ${product.name}`}
+            className="group relative flex flex-col h-full rounded-none overflow-hidden transition-all duration-500 bg-transparent shadow-none"
+          >
+            {/* Aspect Square Image Container */}
+            <div className="relative w-full overflow-hidden bg-gray-50/50 dark:bg-gray-950/50 flex-shrink-0 aspect-square">
+              <motion.img
+                loading="lazy"
+                src={product.images && product.images[0]?.url ? optimizeUnsplashUrl(product.images[0].url, 400) : 'https://via.placeholder.com/300x300'}
+                alt={product.name}
+                className="h-full w-full object-cover object-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              />
+
+              {/* Bottom gradient and Brand name inside the image */}
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/75 via-black/25 to-transparent pointer-events-none" />
+              <div className="absolute bottom-4 left-4 z-10 pointer-events-none">
+                <span className="text-sm sm:text-base font-black tracking-widest text-white uppercase drop-shadow-md block font-sans">
+                  {brandName}
+                </span>
+              </div>
+
+              {/* Wishlist Button */}
+              <button
+                onClick={toggleWishlist}
+                aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                className="absolute top-3 right-3 z-20 p-2 rounded-full bg-white/80 hover:bg-white shadow-md transition-all active:scale-95 pointer-events-auto"
+              >
+                <FiHeart
+                  className={`w-3.5 h-3.5 transition-all duration-300 ${
+                    isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-750'
+                  }`}
+                />
+              </button>
+            </div>
+
+            {/* Content Section Underneath */}
+            <div className="pt-3 pb-2 flex flex-col space-y-0.5 text-left bg-transparent">
+              <h3 className="text-xs sm:text-sm font-black text-gray-900 dark:text-white leading-tight tracking-wide group-hover:text-pink-500 dark:group-hover:text-pink-400 transition-colors duration-200">
+                {getPromoOffer()}
+              </h3>
+              <p className="text-[10px] sm:text-[11px] text-gray-500 dark:text-gray-400 font-bold truncate leading-normal">
+                {getPromoSubtitle()}
+              </p>
+            </div>
+          </Link>
+        </Tilt>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       variants={cardVariants}
       initial="initial"
       animate="animate"
-      whileHover="hover"
-      variants={hoverVariants}
-      className="h-full block"
-      onMouseEnter={() => setIsCardHovered(true)}
-      onMouseLeave={() => setIsCardHovered(false)}
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3 }}
+      className="h-full block select-none"
     >
-      <Tilt
-        tiltMaxAngleX={5}
-        tiltMaxAngleY={5}
-        scale={isCardHovered ? 1.01 : 1}
-        transitionSpeed={400}
-        perspective={1000}
-        className="h-full block"
+      <Link
+        to={`/product/${product._id}`}
+        aria-label={`View details for ${product.name}`}
+        className="group relative flex flex-col h-full bg-[#fdfdfd] dark:bg-[#151515] border border-amber-100/50 dark:border-neutral-800/80 rounded-[28px] p-3 shadow-[0_4px_16px_rgba(212,163,115,0.05)] hover:shadow-[0_12px_32px_rgba(212,163,115,0.12)] hover:-translate-y-1 transition-all duration-300 select-none pb-4"
       >
-        <Link
-          to={`/product/${product._id}`}
-          aria-label={`View details for ${product.name}`}
-          className="group relative flex flex-col h-full bg-white/30 dark:bg-black/30 backdrop-blur-md rounded-3xl overflow-hidden transition-all duration-500 border border-white/20 dark:border-white/10"
-          style={{
-            boxShadow: isCardHovered
-              ? '0 25px 50px rgba(56, 189, 248, 0.15), 0 0 30px rgba(168, 85, 247, 0.15)'
-              : '0 4px 20px rgba(0, 0, 0, 0.02)',
-          }}
-        >
-          {/* Premium Badge */}
-          {discountPercentage > 0 && (
-            <motion.div
-              variants={badgeVariants}
-              initial="initial"
-              animate="animate"
-              className="absolute top-4 left-4 z-20 pointer-events-none"
-            >
-              <div className="relative bg-gradient-to-r from-primary-500/80 to-purple-500/80 text-white px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase shadow-lg backdrop-blur-md border border-white/20">
-                {discountPercentage}% OFF
-              </div>
-            </motion.div>
-          )}
+        {/* Aspect Ratio Image Container */}
+        <div className="relative w-full overflow-hidden bg-gray-50/50 dark:bg-gray-950/50 rounded-[20px] aspect-[3/4]">
+          <motion.img
+            loading="lazy"
+            src={product.images && product.images[0]?.url ? optimizeUnsplashUrl(product.images[0].url, 400) : 'https://via.placeholder.com/300x400'}
+            alt={product.name}
+            className="h-full w-full object-cover object-center"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          />
 
-          {/* Wishlist Button */}
-          <motion.button
-            variants={wishlistButtonVariants}
-            initial="initial"
-            animate={isCardHovered ? "animate" : "initial"}
-            whileTap="tap"
+          {/* NEW Badge overlay on Image */}
+          <div className="absolute top-3 left-3 bg-[#D4A373] text-white px-2 py-0.5 rounded-[4px] text-[10px] font-black uppercase tracking-widest shadow">
+            NEW
+          </div>
+
+          {/* Floating Wishlist Button */}
+          <button
             onClick={toggleWishlist}
             aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-            className="absolute top-4 right-4 z-20 p-2.5 rounded-full backdrop-blur-xl shadow-md pointer-events-auto"
-            style={{
-              background: isWishlisted
-                ? 'rgba(239, 68, 68, 0.25)'
-                : 'rgba(255, 255, 255, 0.15)',
-              border: isWishlisted
-                ? '1px solid rgba(239, 68, 68, 0.4)'
-                : '1px solid rgba(255, 255, 255, 0.25)',
-            }}
+            className="absolute top-3 right-3 p-2 rounded-full bg-white hover:scale-105 transition active:scale-95 shadow-sm pointer-events-auto"
           >
-            <motion.div whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }}>
-              <FiHeart
-                className={`w-4 h-4 transition-all duration-300 ${
-                  isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-950 dark:text-white'
-                }`}
-              />
-            </motion.div>
-          </motion.button>
-
-          {/* Image Container */}
-          <div className="relative aspect-square w-full overflow-hidden bg-gray-50/50 dark:bg-gray-950/50 flex-shrink-0">
-            <motion.img
-              loading="lazy"
-              src={product.images && product.images[0]?.url ? product.images[0].url : 'https://via.placeholder.com/300x400'}
-              alt={product.name}
-              className="h-full w-full object-cover object-center"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+            <FiHeart
+              className={`w-3.5 h-3.5 transition-all duration-300 ${
+                isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-700'
+              }`}
             />
+          </button>
+        </div>
 
-            {/* Gradient Overlay on Hover */}
-            <motion.div
-              variants={overlayVariants}
-              initial="initial"
-              animate={isCardHovered ? "hover" : "initial"}
-              className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/5 to-transparent"
-            />
+        {/* Content Section Underneath */}
+        <div className="pt-3.5 px-1.5 flex flex-col space-y-1.5 text-left flex-grow">
+          {/* Brand Name */}
+          <p className="text-[10px] font-black uppercase tracking-widest text-[#B58A63] font-sans">
+            {product.brand || 'VOGUEFLOW'}
+          </p>
 
-            {/* Action Button on Hover */}
-            <motion.div
-              variants={overlayVariants}
-              initial="initial"
-              animate={isCardHovered ? "hover" : "initial"}
-              className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            >
-              <motion.div
-                variants={buttonVariants}
-                className="bg-white/20 dark:bg-black/30 text-white px-6 py-2.5 rounded-full text-[11px] font-black tracking-widest uppercase shadow-xl flex items-center gap-2 backdrop-blur-md border border-white/20 pointer-events-auto cursor-pointer hover:scale-105 transition-transform"
-              >
-                <FiShoppingCart className="w-4 h-4" />
-                <span>View Product</span>
-              </motion.div>
-            </motion.div>
+          {/* Product Name */}
+          <h3 className="text-xs sm:text-sm font-bold text-gray-800 dark:text-gray-200 truncate leading-tight group-hover:text-[#B58A63] transition-colors">
+            {product.name}
+          </h3>
 
-            {/* Stock Status Badge */}
-            {product.stock === 0 && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-                <div className="bg-red-500/80 text-white px-4 py-1.5 rounded-full font-black text-xs uppercase tracking-widest shadow-lg border border-white/10 backdrop-blur-md">
-                  Sold Out
-                </div>
-              </div>
+          {/* Price Segment */}
+          <div className="flex items-center flex-wrap pt-0.5">
+            {product.discountPrice && product.discountPrice < product.price ? (
+              <>
+                <span className="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white">
+                  {formatCurrency(product.discountPrice)}
+                </span>
+                <span className="text-xs text-gray-400 line-through font-medium ml-1.5">
+                  {formatCurrency(product.price)}
+                </span>
+                <span className="text-xs text-red-500 font-extrabold ml-2">
+                  {discountPercentage}% OFF
+                </span>
+              </>
+            ) : (
+              <span className="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white">
+                {formatCurrency(product.price)}
+              </span>
             )}
           </div>
 
-          {/* Guaranteed Uniform Height Content Section */}
-          <div className="flex flex-col flex-grow justify-between p-5 space-y-3 bg-white/5 dark:bg-black/10 backdrop-blur-xs">
-            <div className="space-y-1.5">
-              {/* Product Name */}
-              <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100 leading-snug tracking-tight line-clamp-2 min-h-[2.5rem] group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
-                {product.name}
-              </h3>
-
-              {/* Rating */}
-              <div className="flex items-center gap-1">
-                <Rating value={product.ratings} text={`(${product.numOfReviews})`} />
-              </div>
-            </div>
-
-            {/* Bottom Anchored Price & Stock Section */}
-            <div className="space-y-1.5 pt-2 border-t border-white/10 dark:border-white/5">
-              <div className="flex items-baseline gap-2">
-                {product.discountPrice && product.discountPrice < product.price ? (
-                  <>
-                    <p className="text-lg font-black bg-gradient-to-r from-primary-600 to-purple-600 dark:from-primary-400 dark:to-purple-400 bg-clip-text text-transparent">
-                      {formatCurrency(product.discountPrice)}
-                    </p>
-                    <p className="text-xs text-gray-400 line-through font-bold">
-                      {formatCurrency(product.price)}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-lg font-black text-gray-900 dark:text-gray-100">
-                    {formatCurrency(product.price)}
-                  </p>
-                )}
-              </div>
-
-              {/* Stock Indicator */}
-              {product.stock > 0 && product.stock <= 5 && (
-                <div className="text-[9px] font-black text-orange-600 dark:text-orange-400 tracking-widest uppercase">
-                  Only {product.stock} left
-                </div>
-              )}
-            </div>
+          {/* Rating */}
+          <div className="flex items-center gap-1 text-[11px] font-bold text-gray-500 dark:text-gray-400 pb-1">
+            <span className="text-amber-500">★</span>
+            <span>{product.ratings || '4.5'}</span>
+            <span className="text-gray-400">({product.numOfReviews || '42'})</span>
           </div>
-        </Link>
-      </Tilt>
+
+          {/* Add to Bag Button */}
+          <button
+            onClick={handleAddToCart}
+            className="w-full mt-2.5 bg-gray-950 hover:bg-gray-900 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-950 py-3 rounded-[14px] text-xs font-black uppercase tracking-widest shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 pointer-events-auto"
+          >
+            <FiShoppingBag className="w-3.5 h-3.5" />
+            <span>Add to Bag</span>
+          </button>
+        </div>
+      </Link>
     </motion.div>
   );
 });

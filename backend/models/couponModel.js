@@ -21,6 +21,16 @@ const couponSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true
+    },
+    bgImage: {
+        public_id: {
+            type: String,
+            required: false
+        },
+        url: {
+            type: String,
+            required: false
+        }
     }
 }, { timestamps: true });
 

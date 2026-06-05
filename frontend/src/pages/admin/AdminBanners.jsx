@@ -63,17 +63,21 @@ const AdminBanners = () => {
 
   const handleCreateOrUpdate = (e) => {
     e.preventDefault();
-    if (!title.trim()) {
-      toast.error('Banner title is required');
-      return;
-    }
 
     if (!isEditing && !bgImage) {
       toast.error('Banner background image is required');
       return;
     }
 
-    const bannerData = { title, subtitle, tag, brands, active };
+    // Default title to pass database schemas safely, with all tags and brands omitted
+    const bannerData = { 
+      title: 'Campaign Hero Banner', 
+      subtitle: '', 
+      tag: '', 
+      brands: '', 
+      active 
+    };
+    
     if (bgImage) {
       bannerData.bgImage = bgImage;
     }
@@ -149,52 +153,6 @@ const AdminBanners = () => {
           </div>
 
           <form onSubmit={handleCreateOrUpdate} className="space-y-5">
-            <div>
-              <label className="block text-xs font-black uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Banner Title</label>
-              <input 
-                type="text" 
-                required 
-                placeholder="e.g. Deep Cleansing Action, Premium Hydration"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="block w-full border border-gray-200 dark:border-gray-700 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-800 dark:text-white text-sm font-semibold placeholder-gray-400 transition-all shadow-sm"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-black uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Subtitle / Offer text</label>
-              <input 
-                type="text" 
-                placeholder="e.g. Under ₹199, Up to 50% Off"
-                value={subtitle}
-                onChange={(e) => setSubtitle(e.target.value)}
-                className="block w-full border border-gray-200 dark:border-gray-700 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-800 dark:text-white text-sm font-semibold placeholder-gray-400 transition-all shadow-sm"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Tag / Hashtag</label>
-                <input 
-                  type="text" 
-                  placeholder="e.g. #DeepClean, #GlowUp"
-                  value={tag}
-                  onChange={(e) => setTag(e.target.value)}
-                  className="block w-full border border-gray-200 dark:border-gray-700 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-800 dark:text-white text-sm font-semibold placeholder-gray-400 transition-all shadow-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Featured Brands</label>
-                <input 
-                  type="text" 
-                  placeholder="e.g. Lakme & Himalaya"
-                  value={brands}
-                  onChange={(e) => setBrands(e.target.value)}
-                  className="block w-full border border-gray-200 dark:border-gray-700 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-800 dark:text-white text-sm font-semibold placeholder-gray-400 transition-all shadow-sm"
-                />
-              </div>
-            </div>
 
             <div className="flex items-center gap-6 py-2 border-y border-gray-100 dark:border-gray-800 my-4">
               <label className="text-xs font-black uppercase tracking-wider text-gray-500 dark:text-gray-400 flex-1">Banner Visibility</label>
@@ -311,24 +269,12 @@ const AdminBanners = () => {
                   {/* Banner Content */}
                   <div className="p-4 flex-1 flex flex-col justify-between">
                     <div>
-                      {banner.brands && (
-                        <span className="inline-block bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 px-2 py-0.5 rounded text-[10px] font-black uppercase mb-2 shadow-sm">
-                          {banner.brands}
-                        </span>
-                      )}
-                      <h4 className="font-extrabold text-gray-900 dark:text-white text-base line-clamp-1">
-                        {banner.title}
+                      <h4 className="font-extrabold text-gray-900 dark:text-white text-sm uppercase tracking-wider">
+                        Campaign Banner
                       </h4>
-                      {banner.subtitle && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400 font-semibold mt-1">
-                          {banner.subtitle}
-                        </p>
-                      )}
-                      {banner.tag && (
-                        <span className="inline-block text-[10px] font-black text-primary-500 dark:text-primary-400 mt-2 bg-primary-50 dark:bg-primary-950/30 px-2 py-0.5 rounded-lg">
-                          {banner.tag}
-                        </span>
-                      )}
+                      <p className="text-[10px] text-gray-400 font-medium mt-1">
+                        ID: {banner._id}
+                      </p>
                     </div>
 
                     <div className="flex items-center justify-end gap-2 border-t border-gray-100 dark:border-gray-800 mt-4 pt-3">

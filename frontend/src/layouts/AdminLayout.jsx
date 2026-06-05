@@ -6,14 +6,24 @@ import AdminSidebar from '../components/admin/AdminSidebar';
 
 const AdminLayout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
+    const toggleDesktopSidebar = () => {
+        setIsDesktopCollapsed((prev) => !prev);
+    };
+
     return (
         <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-            <AdminSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+            <AdminSidebar
+                isOpen={isSidebarOpen}
+                toggleSidebar={toggleSidebar}
+                isDesktopCollapsed={isDesktopCollapsed}
+                toggleDesktopSidebar={toggleDesktopSidebar}
+            />
 
             {/* Mobile Header */}
             <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-gray-900/95 backdrop-blur-xl border-b border-gray-700/50">
@@ -30,7 +40,9 @@ const AdminLayout = () => {
                 </div>
             </div>
 
-            <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pt-20 md:pt-8">
+            <main className={`flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pt-20 md:pt-8 transition-all duration-300 ${
+                isDesktopCollapsed ? 'md:ml-[70px]' : 'md:ml-[250px]'
+            }`}>
                 <Outlet />
             </main>
         </div>

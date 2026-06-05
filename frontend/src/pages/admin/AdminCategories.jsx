@@ -255,7 +255,7 @@ const AdminCategories = () => {
                           {category.image?.url ? (
                             <img src={category.image.url} alt={category.name} className="w-full h-full object-cover" />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-gray-400 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+                            <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-gray-400 bg-gray-100 dark:bg-gray-800">
                               N/A
                             </div>
                           )}

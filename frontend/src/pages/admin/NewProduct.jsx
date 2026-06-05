@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createProduct, clearErrors, resetProductState } from '../../redux/slices/productSlice';
-import { getCategories } from '../../redux/slices/categorySlice';
+import { createProduct, clearErrors as clearProductErrors, resetProductState } from '../../redux/slices/productSlice';
+import { getCategories, clearErrors as clearCategoryErrors } from '../../redux/slices/categorySlice';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import ProductForm from '../../components/admin/ProductForm';
@@ -11,7 +11,7 @@ const NewProduct = () => {
   const navigate = useNavigate();
 
   const { loading, error, isCreated } = useSelector((state) => state.products || {});
-  const { categories } = useSelector((state) => state.categories);
+  const { categories, error: categoryError } = useSelector((state) => state.categories);
 
   const defaultValues = useMemo(() => ({
     name: '',
@@ -32,14 +32,18 @@ const NewProduct = () => {
   useEffect(() => {
     if (error) {
       toast.error(error);
-      dispatch(clearErrors());
+      dispatch(clearProductErrors());
+    }
+    if (categoryError) {
+      toast.error(categoryError);
+      dispatch(clearCategoryErrors());
     }
     if (isCreated) {
       toast.success('Product created successfully');
       dispatch(resetProductState());
       navigate('/admin/products');
     }
-  }, [dispatch, error, isCreated, navigate]);
+  }, [dispatch, error, categoryError, isCreated, navigate]);
 
   useEffect(() => {
     dispatch(getCategories());

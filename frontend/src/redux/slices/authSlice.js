@@ -65,6 +65,8 @@ const initialState = {
   isAuthenticated: false,
   loading: false,
   error: null,
+  isAuthModalOpen: false,
+  authModalMode: 'login',
 };
 
 const authSlice = createSlice({
@@ -72,6 +74,19 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     clearErrors: (state) => {
+      state.error = null;
+    },
+    openAuthModal: (state, action) => {
+      state.isAuthModalOpen = true;
+      state.authModalMode = action.payload || 'login';
+      state.error = null;
+    },
+    closeAuthModal: (state) => {
+      state.isAuthModalOpen = false;
+      state.error = null;
+    },
+    setAuthModalMode: (state, action) => {
+      state.authModalMode = action.payload;
       state.error = null;
     },
   },
@@ -148,5 +163,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearErrors } = authSlice.actions;
+export const { clearErrors, openAuthModal, closeAuthModal, setAuthModalMode } = authSlice.actions;
 export default authSlice.reducer;

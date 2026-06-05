@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { googleLoginUser } from '../redux/slices/authSlice';
+import { googleLoginUser, openAuthModal } from '../redux/slices/authSlice';
 import { updateCartDB } from '../redux/slices/cartSlice';
 import { clearWishlistDB } from '../redux/slices/wishlistSlice';
 import { toast } from 'react-toastify';
@@ -24,7 +24,8 @@ const GoogleCallback = () => {
 
     if (!code || !state) {
       toast.error('Invalid OAuth callback parameters.');
-      navigate('/login');
+      navigate('/');
+      dispatch(openAuthModal('login'));
       return;
     }
 
@@ -32,7 +33,8 @@ const GoogleCallback = () => {
     const savedState = sessionStorage.getItem('google_oauth_state');
     if (!savedState || savedState !== state) {
       toast.error('Security handshake verification failed: State parameter mismatch. Potential CSRF detected.');
-      navigate('/login');
+      navigate('/');
+      dispatch(openAuthModal('login'));
       return;
     }
 
@@ -46,7 +48,8 @@ const GoogleCallback = () => {
   useEffect(() => {
     if (error) {
       toast.error(error);
-      navigate('/login');
+      navigate('/');
+      dispatch(openAuthModal('login'));
     }
 
     if (isAuthenticated && user) {
@@ -75,7 +78,7 @@ const GoogleCallback = () => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         className="max-w-md w-full mx-4 p-8 rounded-[36px] bg-white/40 dark:bg-black/30 border border-white/20 dark:border-white/10 shadow-2xl backdrop-blur-xl relative overflow-hidden text-center"
       >
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-primary-500/40 to-transparent" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-primary-500/40" />
 
         <div className="w-16 h-16 rounded-full bg-white dark:bg-black/20 flex items-center justify-center mx-auto mb-6 shadow-lg border border-gray-100 dark:border-white/5 relative">
           <FcGoogle className="w-8 h-8 animate-pulse" />

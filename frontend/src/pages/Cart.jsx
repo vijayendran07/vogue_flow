@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import CartItem from '../components/cart/CartItem';
 import { applyCoupon, clearCart } from '../redux/slices/cartSlice';
+import { openAuthModal } from '../redux/slices/authSlice';
+import api from '../services/api';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -15,7 +17,8 @@ import {
   FiLock,
   FiTag,
   FiShoppingBag,
-  FiArrowLeft
+  FiArrowLeft,
+  FiHeadphones
 } from 'react-icons/fi';
 
 const containerVariants = {
@@ -45,12 +48,37 @@ const Cart = () => {
 
     const [couponCode, setCouponCode] = useState('');
     const [isApplying, setIsApplying] = useState(false);
+    const [availableCoupons, setAvailableCoupons] = useState([]);
 
     useEffect(() => {
         if(error) {
             toast.error(error);
         }
     }, [error]);
+
+    const fetchActiveCoupons = async () => {
+        try {
+            const { data } = await api.get('/coupons');
+            if (data?.success) {
+                setAvailableCoupons(data.coupons || []);
+            }
+        } catch (err) {
+            setAvailableCoupons([]);
+        }
+    };
+
+    useEffect(() => {
+        fetchActiveCoupons();
+
+        const refreshCoupons = () => fetchActiveCoupons();
+        window.addEventListener('focus', refreshCoupons);
+        document.addEventListener('visibilitychange', refreshCoupons);
+
+        return () => {
+            window.removeEventListener('focus', refreshCoupons);
+            document.removeEventListener('visibilitychange', refreshCoupons);
+        };
+    }, []);
 
     const handleApplyCoupon = async () => {
         if(!couponCode.trim()) {
@@ -75,7 +103,7 @@ const Cart = () => {
         if(isAuthenticated) {
             navigate('/checkout');
         } else {
-            navigate('/login?redirect=checkout');
+            dispatch(openAuthModal('login'));
         }
     };
 
@@ -87,98 +115,100 @@ const Cart = () => {
             initial="hidden"
             animate="show"
             variants={containerVariants}
-            className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white antialiased transition-colors duration-300"
+            className="min-h-screen bg-[#0f1b2e] dark:bg-[#0a1120] text-white antialiased transition-colors duration-300 w-full"
         >
-            {/* Immersive Top Bar */}
-            <div className="border-b border-gray-100 dark:border-gray-800/60 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-28 sm:top-16 z-30">
-                <div className="container mx-auto px-4 py-3 sm:py-4 max-w-7xl flex items-center justify-between">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 py-6 sm:py-8 lg:py-12">
+                <div className="mb-6">
                     <motion.button
                         variants={buttonVariants}
                         whileHover={{ x: -4 }}
                         onClick={() => navigate('/products')}
-                        className="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition"
+                        className="flex items-center gap-2 text-sm font-semibold text-white/75 hover:text-white transition tracking-wide"
                     >
                         <FiArrowLeft className="w-4 h-4" />
-                        <span className="hidden sm:inline">Continue Selection</span>
+                        <span>Back to Shopping</span>
                     </motion.button>
-
-                    <div className="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">
-                        <span>Secure Checkout Desk</span>
-                    </div>
                 </div>
-            </div>
-
-            <div className="container mx-auto px-4 py-6 sm:py-8 lg:py-12 max-w-7xl">
                 
-                {/* Master Title Statement */}
-                <motion.div variants={itemVariants} className="mb-8 lg:mb-12">
-                    <p className="text-xs font-bold text-primary-600 dark:text-primary-400 tracking-widest uppercase mb-1">
-                        Curated Requisition
-                    </p>
-                    <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white tracking-tight leading-none">
-                        Review Your Bag
-                    </h1>
-                </motion.div>
-
                 {!cartItems || cartItems?.length === 0 ? (
-                    /* High-End Immersive Empty Suite */
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.98 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5 }}
-                        className="relative overflow-hidden rounded-3xl bg-gray-50 dark:bg-gray-800/20 border border-gray-100 dark:border-gray-800/80 p-12 md:p-24 text-center shadow-sm"
-                    >
-                        {/* Dynamic aesthetic visual elements */}
+                    <>
+                        {/* Master Title Statement */}
+                        <motion.div variants={itemVariants} className="mb-8 lg:mb-12">
+                            <p className="text-xs font-bold text-pink-400 tracking-widest uppercase mb-1">
+                                Curated Requisition
+                            </p>
+                            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-none">
+                                Review Your Bag
+                            </h1>
+                        </motion.div>
+                        {/* High-End Immersive Empty Suite */}
                         <motion.div
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-primary-100/40 dark:bg-primary-950/20 rounded-full blur-3xl pointer-events-none"
-                            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-                            transition={{ duration: 6, repeat: Infinity }}
-                        />
-
-                        <div className="relative z-10 max-w-md mx-auto space-y-6">
-                            <motion.div 
-                                className="w-20 h-20 rounded-full bg-white dark:bg-gray-800 shadow-md border border-gray-100 dark:border-gray-700 flex items-center justify-center mx-auto text-gray-900 dark:text-white"
-                                animate={{ y: [0, -8, 0] }}
-                                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                            >
-                                <FiShoppingBag className="w-8 h-8 stroke-[1.5]" />
-                            </motion.div>
-
-                            <div className="space-y-2">
-                                <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-gray-900 dark:text-white">
-                                    Your Requisition is Empty
-                                </h2>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                                    Discover absolute modern utility across our master catalog. Add outstanding items to initiate your personal collection portfolio.
-                                </p>
-                            </div>
-
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5 }}
+                            className="relative overflow-hidden rounded-3xl bg-white/5 border border-white/10 p-12 md:p-24 text-center shadow-sm"
+                        >
                             <motion.div
-                                variants={buttonVariants}
-                                initial="initial"
-                                whileHover="hover"
-                                whileTap="tap"
-                                className="pt-4"
-                            >
-                                <Link
-                                    to="/products"
-                                    className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-full text-sm shadow-lg hover:shadow-xl transition"
+                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-white/5 rounded-full blur-3xl pointer-events-none"
+                                animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+                                transition={{ duration: 6, repeat: Infinity }}
+                            />
+
+                            <div className="relative z-10 max-w-md mx-auto space-y-6">
+                                <motion.div 
+                                    className="w-20 h-20 rounded-full bg-white/5 shadow-md border border-white/10 flex items-center justify-center mx-auto text-white"
+                                    animate={{ y: [0, -8, 0] }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                                 >
-                                    <span>Explore Master Catalog</span>
-                                    <FiArrowRight className="w-4 h-4" />
-                                </Link>
-                            </motion.div>
-                        </div>
-                    </motion.div>
+                                    <FiShoppingBag className="w-8 h-8 stroke-[1.5]" />
+                                </motion.div>
+
+                                <div className="space-y-2">
+                                    <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                                        Your Requisition is Empty
+                                    </h2>
+                                    <p className="text-sm text-gray-400 leading-relaxed">
+                                        Discover absolute modern utility across our master catalog. Add outstanding items to initiate your personal collection portfolio.
+                                    </p>
+                                </div>
+
+                                <motion.div
+                                    variants={buttonVariants}
+                                    initial="initial"
+                                    whileHover="hover"
+                                    whileTap="tap"
+                                    className="pt-4"
+                                >
+                                    <Link
+                                        to="/products"
+                                        className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-gray-900 font-bold rounded-full text-sm shadow-lg hover:shadow-xl transition"
+                                    >
+                                        <span>Explore Master Catalog</span>
+                                        <FiArrowRight className="w-4 h-4" />
+                                    </Link>
+                                </motion.div>
+                            </div>
+                        </motion.div>
+                    </>
                 ) : (
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                         
                         {/* Left Main Bag Listing Container */}
                         <motion.div variants={itemVariants} className="lg:col-span-7 space-y-6">
                             
-                            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-4">
-                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                                    {totalItems} {totalItems === 1 ? 'Asset Included' : 'Assets Included'}
+                            {/* Master Title Statement */}
+                            <div className="mb-8 lg:mb-10">
+                                <p className="text-xs font-bold text-pink-400 tracking-widest uppercase mb-1">
+                                    CURATED REQUISITION
+                                </p>
+                                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-none">
+                                    Review Your Bag
+                                </h1>
+                            </div>
+
+                            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                                <span className="text-xs font-bold text-gray-405 uppercase tracking-wider">
+                                    {totalItems} {totalItems === 1 ? 'ITEM IN YOUR BAG' : 'ITEMS IN YOUR BAG'}
                                 </span>
                                 
                                 <motion.button
@@ -188,9 +218,9 @@ const Cart = () => {
                                         dispatch(clearCart());
                                         toast.info('Requisition list reset successfully');
                                     }}
-                                    className="text-xs font-bold text-red-600 dark:text-red-400 hover:underline tracking-wider uppercase"
+                                    className="text-xs font-bold text-pink-400 hover:underline tracking-wider uppercase"
                                 >
-                                    Reset Selection
+                                    RESET SELECTION
                                 </motion.button>
                             </div>
 
@@ -208,9 +238,25 @@ const Cart = () => {
                                 </AnimatePresence>
                             </motion.div>
 
-                            <div className="pt-4 flex justify-between items-center text-xs text-gray-400">
-                                <span>Need direct consultation?</span>
-                                <span className="font-bold text-gray-900 dark:text-white">Call +1 (800) VOGUE-VIP</span>
+
+                            
+                            
+                            {/* Proceed to Payment Button */}
+                            <div className="pt-2">
+                                <motion.button
+                                    variants={buttonVariants}
+                                    initial="initial"
+                                    whileHover="hover"
+                                    whileTap="tap"
+                                    onClick={checkoutHandler}
+                                    disabled={cartItems.length === 0}
+                                    className="w-full h-14 bg-white text-gray-900 font-bold tracking-widest text-xs uppercase rounded-2xl flex items-center justify-center gap-3 relative overflow-hidden group shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <div className="absolute inset-0 w-1/3 h-full bg-white/10 skew-x-12 -translate-x-full group-hover:translate-x-[400%] transition-transform duration-1000" />
+                                    <FiLock className="w-4 h-4 transition-transform group-hover:scale-110" />
+                                    <span>PROCEED TO PAYMENT</span>
+                                    <FiArrowRight className="w-4 h-4" />
+                                </motion.button>
                             </div>
 
                         </motion.div>
@@ -221,38 +267,35 @@ const Cart = () => {
                             className="lg:col-span-5 lg:sticky lg:top-32 space-y-6"
                         >
                             {/* Premium Receipt Summary Viewport */}
-                            <div className="p-4 sm:p-6 md:p-8 rounded-3xl bg-gray-50/80 dark:bg-gray-800/30 border border-gray-100 dark:border-gray-800/80 space-y-5 sm:space-y-6">
+                            <div className="p-6 md:p-8 rounded-3xl bg-white/5 border border-white/10 space-y-6">
                                 
                                 <div>
-                                    <span className="text-[10px] font-bold text-primary-600 dark:text-primary-400 uppercase tracking-widest block mb-0.5">
-                                        Requisition Metrics
-                                    </span>
-                                    <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">
-                                        Summary of Investment
+                                    <h3 className="text-lg font-black text-white tracking-tight">
+                                        Order Summary
                                     </h3>
                                 </div>
 
                                 <div className="space-y-4 text-sm">
                                     {/* Subtotal line */}
-                                    <div className="flex justify-between items-center text-gray-600 dark:text-gray-400">
+                                    <div className="flex justify-between items-center text-gray-300">
                                         <span>Subtotal</span>
-                                        <span className="font-bold text-gray-900 dark:text-white">
+                                        <span className="font-bold text-white">
                                             {formatCurrency(subTotal)}
                                         </span>
                                     </div>
 
                                     {/* Estimated Shipping */}
-                                    <div className="flex justify-between items-center text-gray-600 dark:text-gray-400">
+                                    <div className="flex justify-between items-center text-gray-300">
                                         <span>Logistics & Handling</span>
-                                        <span className={`font-bold ${shippingPrice === 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-900 dark:text-white'}`}>
+                                        <span className={`font-bold ${shippingPrice === 0 ? 'text-emerald-400' : 'text-white'}`}>
                                             {shippingPrice === 0 ? 'Complimentary' : formatCurrency(shippingPrice)}
                                         </span>
                                     </div>
 
                                     {/* Luxury Tax */}
-                                    <div className="flex justify-between items-center text-gray-600 dark:text-gray-400">
-                                        <span>Jurisdiction Levies</span>
-                                        <span className="font-bold text-gray-900 dark:text-white">
+                                    <div className="flex justify-between items-center text-gray-300">
+                                        <span>GST (5%)</span>
+                                        <span className="font-bold text-white">
                                             {formatCurrency(taxPrice)}
                                         </span>
                                     </div>
@@ -264,7 +307,7 @@ const Cart = () => {
                                                 initial={{ opacity: 0, y: -5 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: -5 }}
-                                                className="flex justify-between items-center p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/40 text-emerald-800 dark:text-emerald-300 font-bold text-xs uppercase tracking-wider"
+                                                className="flex justify-between items-center p-3 rounded-xl bg-emerald-950/30 border border-emerald-900/40 text-emerald-300 font-bold text-xs uppercase tracking-wider"
                                             >
                                                 <span>Privilege Applied ({discountPercentage}%)</span>
                                                 <span>−{formatCurrency(estimatedDiscount)}</span>
@@ -273,16 +316,16 @@ const Cart = () => {
                                     </AnimatePresence>
 
                                     {/* Grand Total Execution block */}
-                                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700/80 flex justify-between items-baseline">
+                                    <div className="pt-4 border-t border-white/10 flex justify-between items-baseline">
                                         <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                                            Total Outlay
+                                            TO PAY
                                         </span>
                                         
                                         <motion.span
                                             key={totalPrice}
                                             initial={{ scale: 1.1 }}
                                             animate={{ scale: 1 }}
-                                            className="text-3xl font-black text-gray-900 dark:text-white tracking-tight"
+                                            className="text-3xl font-black text-white tracking-tight"
                                         >
                                             {formatCurrency(totalPrice)}
                                         </motion.span>
@@ -291,20 +334,19 @@ const Cart = () => {
                             </div>
 
                             {/* Promo Code Validation Sub-Desk */}
-                            <div className="p-4 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200/60 dark:border-gray-700/60 space-y-3">
-                                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
-                                    <FiTag className="w-3.5 h-3.5" />
-                                    <span>Privilege / Coupon Activation</span>
-                                </label>
+                            <div className="p-6 rounded-3xl bg-white/5 border border-white/10 space-y-4">
+                                <h3 className="text-lg font-black text-white tracking-tight flex items-center gap-2">
+                                <span>Apply Coupon</span>
+                                </h3>
 
                                 <div className="flex gap-2">
                                     <input
                                         type="text"
-                                        placeholder="e.g. VIPLUXE"
+                                        placeholder="Enter coupon code"
                                         value={couponCode}
                                         onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                                         onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
-                                        className="flex-1 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white text-sm font-bold placeholder-gray-400 focus:outline-none focus:border-gray-900 dark:focus:border-white transition"
+                                        className="flex-1 px-4 py-3 rounded-xl border border-white/10 bg-[#0f1b2e] text-white text-sm font-bold placeholder-gray-500 focus:outline-none focus:border-white transition"
                                     />
                                     
                                     <motion.button
@@ -313,42 +355,38 @@ const Cart = () => {
                                         whileTap="tap"
                                         onClick={handleApplyCoupon}
                                         disabled={isApplying}
-                                        className="px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl text-xs uppercase tracking-wider hover:shadow-md transition disabled:opacity-50 flex items-center justify-center"
+                                        className="px-6 py-3 bg-white text-gray-900 font-bold rounded-xl text-xs uppercase tracking-wider hover:shadow-md transition disabled:opacity-50 flex items-center justify-center"
                                     >
-                                        {isApplying ? 'Validating...' : 'Apply'}
+                                        {isApplying ? 'Validating...' : 'APPLY'}
                                     </motion.button>
                                 </div>
+
+                                {availableCoupons.length > 0 && (
+                                    <div className="pt-2">
+                                        <p className="text-[11px] font-bold uppercase tracking-wider text-gray-450 mb-2">AVAILABLE CODES</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {availableCoupons.slice(0, 5).map((coupon) => (
+                                                <button
+                                                    key={coupon._id}
+                                                    type="button"
+                                                    onClick={async () => {
+                                                        setCouponCode(coupon.code);
+                                                        const res = await dispatch(applyCoupon(coupon.code));
+                                                        if (!res.error) {
+                                                            toast.success(`Applied ${coupon.code}`);
+                                                        }
+                                                    }}
+                                                    className="px-3 py-1.5 rounded-full border border-white/10 bg-[#0f1b2e] text-xs font-bold tracking-wide text-gray-300 hover:border-white hover:text-white transition"
+                                                >
+                                                    {coupon.code} ({coupon.discountPercentage}%)
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
-                            {/* Primary Secure Gateway CTA Action */}
-                            <div className="space-y-3">
-                                <motion.button
-                                    variants={buttonVariants}
-                                    initial="initial"
-                                    whileHover="hover"
-                                    whileTap="tap"
-                                    onClick={checkoutHandler}
-                                    className="w-full h-12 sm:h-14 bg-gradient-to-r from-gray-900 via-primary-700 to-gray-900 dark:from-white dark:via-primary-400 dark:to-white text-white dark:text-gray-900 font-bold rounded-2xl shadow-xl hover:shadow-2xl transition flex items-center justify-center gap-2 sm:gap-3 relative group overflow-hidden text-sm sm:text-base tracking-wide"
-                                >
-                                    {/* Sweeping dynamic sheen effect */}
-                                    <div className="absolute inset-0 w-1/3 h-full bg-white/15 dark:bg-black/10 skew-x-12 -translate-x-full group-hover:translate-x-[400%] transition-transform duration-1000" />
-                                    <FiLock className="w-4 h-4 transition-transform group-hover:scale-110" />
-                                    <span>Proceed to Secure Checkout</span>
-                                    <FiArrowRight className="w-4 h-4" />
-                                </motion.button>
-
-                                {/* Authenticity Assurances Matrix */}
-                                <div className="grid grid-cols-2 gap-3 pt-2">
-                                    <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/40 flex flex-col items-center text-center">
-                                        <FiTruck className="w-4 h-4 text-primary-600 dark:text-primary-400 mb-1" />
-                                        <span className="text-[11px] font-bold text-gray-900 dark:text-white">Priority Dispatched</span>
-                                    </div>
-                                    <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/40 flex flex-col items-center text-center">
-                                        <FiShield className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mb-1" />
-                                        <span className="text-[11px] font-bold text-gray-900 dark:text-white">Vault Encrypted</span>
-                                    </div>
-                                </div>
-                            </div>
+                          
 
                         </motion.div>
                     </div>

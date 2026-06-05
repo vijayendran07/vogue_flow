@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import api from '../services/api';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { openAuthModal } from '../redux/slices/authSlice';
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
@@ -9,6 +11,7 @@ const ResetPassword = () => {
   const [loading, setLoading] = useState(false);
   
   const { token } = useParams();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -19,8 +22,9 @@ const ResetPassword = () => {
     setLoading(true);
     try {
       const { data } = await api.put(`/password/reset/${token}`, { password, confirmPassword });
-      toast.success('Password updated successfully');
-      navigate('/login');
+      toast.success(data.message || 'Vault key renewed successfully');
+      navigate('/');
+      dispatch(openAuthModal('login'));
     } catch (error) {
       toast.error(error.response?.data?.message || 'Something went wrong');
     }

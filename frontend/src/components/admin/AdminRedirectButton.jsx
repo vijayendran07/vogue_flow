@@ -30,7 +30,7 @@ const AdminRedirectButton = () => {
       }}
       whileTap={{ scale: 0.95 }}
       onClick={handleRedirect}
-      className="fixed top-6 right-6 z-50 flex items-center space-x-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-medium"
+      className="fixed top-6 right-6 z-50 flex items-center space-x-2 px-4 py-3 bg-[#003e6d] text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-medium"
     >
       <Shield className="w-5 h-5" />
       <span className="hidden sm:inline">Go to Admin Panel</span>

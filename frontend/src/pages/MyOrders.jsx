@@ -8,7 +8,7 @@ import { FiEye } from 'react-icons/fi';
 
 const MyOrders = () => {
     const dispatch = useDispatch();
-    const { loading, error, orders } = useSelector((state) => state.order);
+    const { loading, error, orders } = useSelector((state) => state.order || {});
 
     useEffect(() => {
         if (error) {
@@ -21,10 +21,10 @@ const MyOrders = () => {
     return (
         <div className="container mx-auto px-4 py-8 max-w-7xl">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 border-b pb-4 border-gray-200 dark:border-gray-700">My Orders</h2>
-            
+
             {loading ? (
                 <div className="text-center py-12 text-gray-500 dark:text-gray-400">Loading Orders...</div>
-            ) : orders && orders.length === 0 ? (
+            ) : !orders || orders.length === 0 ? (
                 <div className="text-center py-16">
                     <h3 className="text-xl text-gray-600 dark:text-gray-400 mb-4">You have no orders yet.</h3>
                     <Link to="/products" className="bg-primary-600 text-white px-6 py-2 rounded-md hover:bg-primary-700">Start Shopping</Link>
@@ -34,17 +34,33 @@ const MyOrders = () => {
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-50 dark:bg-gray-900">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Order ID</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Product Name</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Items Qty</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
+
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            {orders && orders.map((order) => (
-                                <tr key={order._id}>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{order._id}</td>
+                            {orders.map((order) => (
+                                <tr key={order._id} className="hover:bg-gray-50 dark:hover:bg-gray-900/60 transition-colors">
+                                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
+                                        <div className="font-semibold text-gray-900 dark:text-white max-w-xs truncate" title={order.orderItems?.map(item => item.name).join(', ')}>
+                                            {order.orderItems && order.orderItems.length > 0 ? (
+                                                order.orderItems.length === 1 ? (
+                                                    order.orderItems[0].name
+                                                ) : (
+                                                    `${order.orderItems[0].name} (+${order.orderItems.length - 1} more)`
+                                                )
+                                            ) : (
+                                                'N/A'
+                                            )}
+                                        </div>
+                                        <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 font-mono">
+                                            #{order._id}
+                                        </div>
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                                             order.orderStatus === 'Delivered' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
@@ -54,11 +70,11 @@ const MyOrders = () => {
                                             {order.orderStatus}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{order.orderItems.length}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{order.orderItems?.length ?? 0}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{formatCurrency(order.totalPrice)}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <Link to={`/order/${order._id}`} className="text-primary-600 dark:text-primary-400 hover:text-primary-900">
-                                            <FiEye className="w-5 h-5 inline-block" />
+                                        <Link to={`/order/${order._id}`} className="text-primary-600 dark:text-primary-400 hover:text-primary-900 inline-flex items-center gap-2">
+                                            <FiEye className="w-5 h-5" /> View
                                         </Link>
                                     </td>
                                 </tr>
@@ -72,3 +88,4 @@ const MyOrders = () => {
 };
 
 export default MyOrders;
+
