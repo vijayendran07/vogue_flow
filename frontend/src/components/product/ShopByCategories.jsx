@@ -211,18 +211,45 @@ const ShopByCategories = ({
                   
 
                   {showCouponAfterThis && (
-                    <section className="w-full mb-0 overflow-hidden relative px-4 lg:px-6 py-2">
-                      <Link
-                        to="/products"
-                        className="relative block w-full group overflow-hidden rounded-xl shadow-sm"
-                      >
+                    <section className="w-full relative my-8 border-y border-gray-100 dark:border-gray-800">
+                      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden group">
+                        {/* Background Image */}
                         <img
-                          src={optimizeUnsplashUrl(activeCoupon?.bgImage?.url || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1600&auto=format&fit=crop", 1000)}
+                          src={optimizeUnsplashUrl(activeCoupon?.bgImage?.url || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1600&auto=format&fit=crop", 1200)}
                           alt="Fashion Coupon Banner"
-                          className="w-full h-auto object-contain block group-hover:scale-[1.01] transition-transform duration-500"
+                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                           loading="lazy"
                         />
-                      </Link>
+                        {/* Dark Overlay */}
+                        <div className="absolute inset-0 bg-black/50 transition-colors duration-500 group-hover:bg-black/40" />
+                        
+                        {/* Content */}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+                          <span className="px-3 py-1 bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-black uppercase tracking-widest rounded-full mb-4">
+                            Limited Time Offer
+                          </span>
+                          <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-wider mb-2 drop-shadow-md">
+                            Get {activeCoupon?.discountPercentage || 25}% Off
+                          </h2>
+                          <p className="text-sm md:text-base text-gray-200 font-medium mb-6 max-w-md drop-shadow">
+                            Elevate your wardrobe with premium fashion. Apply this exclusive code at checkout.
+                          </p>
+                          
+                          <div className="flex items-center gap-4">
+                            <div className="border border-dashed border-white/60 bg-black/30 backdrop-blur-sm px-6 py-3 rounded-lg">
+                              <span className="text-xl md:text-2xl font-black tracking-widest text-white">
+                                {activeCoupon?.code || 'VOGUESAVE'}
+                              </span>
+                            </div>
+                            <Link
+                              to="/products"
+                              className="px-6 py-3.5 bg-white text-black text-xs font-black uppercase tracking-widest rounded-lg hover:bg-gray-100 transition shadow-lg"
+                            >
+                              Shop Now
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
                     </section>
                   )}
                 </React.Fragment>

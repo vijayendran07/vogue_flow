@@ -50,7 +50,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-slate-950 text-gray-300 border-t border-white/5 mt-auto">
+    <footer className="bg-black text-white border-t border-white/10 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Main Footer Content */}
@@ -67,8 +67,8 @@ const Footer = () => {
                 viewport={{ once: true }}
               >
                 <Link to="/" className="inline-block group">
-                  <span className="text-3xl font-black text-blue-500 group-hover:scale-105 transition-transform duration-200">
-                    VogueFlow
+                  <span className="text-3xl font-black text-white group-hover:scale-105 transition-transform duration-200">
+                    VOGUEFLOW
                   </span>
                 </Link>
                 <p className="mt-4 text-gray-400 text-sm leading-relaxed max-w-sm">
@@ -81,16 +81,16 @@ const Footer = () => {
 
                 {/* Contact Info */}
                 <div className="mt-4 space-y-2">
-                  <div className="flex items-center text-sm text-gray-400 hover:text-bluetransition-colors duration-200">
-                    <FiMail className="w-4 h-4 mr-3 text-blue-500" />
+                  <div className="flex items-center text-sm text-gray-400 hover:text-white transition-colors duration-200">
+                    <FiMail className="w-4 h-4 mr-3 text-white" />
                     hello@vogueflow.com
                   </div>
-                  <div className="flex items-center text-sm text-gray-400 hover:text-blue transition-colors duration-200">
-                    <FiPhone className="w-4 h-4 mr-3 text-blue-500" />
+                  <div className="flex items-center text-sm text-gray-400 hover:text-white transition-colors duration-200">
+                    <FiPhone className="w-4 h-4 mr-3 text-white" />
                     +1 (555) 123-4567
                   </div>
-                  <div className="flex items-center text-sm text-gray-400 hover:text-blue transition-colors duration-200">
-                    <FiMapPin className="w-4 h-4 mr-3 text-blue-500" />
+                  <div className="flex items-center text-sm text-gray-400 hover:text-white transition-colors duration-200">
+                    <FiMapPin className="w-4 h-4 mr-3 text-white" />
                    Tamil Nadu, India
                   </div>
                 </div>
@@ -107,7 +107,7 @@ const Footer = () => {
                         whileInView={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.4, delay: index * 0.1 }}
                         viewport={{ once: true }}
-                        className="p-2 rounded-xl bg-white/5 text-gray-400 hover:bg-blue-500/10 hover:text-blue-500 hover:border-blue-500/30 border border-white/5 transition-all duration-200"
+                        className="p-2 rounded-full bg-white/5 text-gray-400 hover:bg-white hover:text-black border border-white/10 transition-all duration-200"
                         aria-label={social.label}
                       >
                         <Icon className="w-5 h-5" />
@@ -132,7 +132,7 @@ const Footer = () => {
                   <ul className="space-y-3">
                     {footerLinks.shop.map((link) => (
                       <li key={link.name}>
-                        <Link to={link.path} className="text-sm text-gray-400 hover:text-blue-500 transition-colors duration-200">{link.name}</Link>
+                        <Link to={link.path} className="text-sm text-gray-400 hover:text-white transition-colors duration-200">{link.name}</Link>
                       </li>
                     ))}
                   </ul>
@@ -142,7 +142,7 @@ const Footer = () => {
                   <ul className="space-y-3">
                     {footerLinks.account.map((link) => (
                       <li key={link.name}>
-                        <Link to={link.path} className="text-sm text-gray-400 hover:text-blue-500 transition-colors duration-200">{link.name}</Link>
+                        <Link to={link.path} className="text-sm text-gray-400 hover:text-white transition-colors duration-200">{link.name}</Link>
                       </li>
                     ))}
                   </ul>
@@ -162,7 +162,7 @@ const Footer = () => {
                   <ul className="space-y-3">
                     {footerLinks.support.map((link) => (
                       <li key={link.name}>
-                        <Link to={link.path} className="text-sm text-gray-400 hover:text-blue-500 transition-colors duration-200">{link.name}</Link>
+                        <Link to={link.path} className="text-sm text-gray-400 hover:text-white transition-colors duration-200">{link.name}</Link>
                       </li>
                     ))}
                   </ul>
@@ -172,7 +172,7 @@ const Footer = () => {
                   <ul className="space-y-3">
                     {footerLinks.legal.map((link) => (
                       <li key={link.name}>
-                        <Link to={link.path} className="text-sm text-gray-400 hover:text-blue-500 transition-colors duration-200">{link.name}</Link>
+                        <Link to={link.path} className="text-sm text-gray-400 hover:text-white transition-colors duration-200">{link.name}</Link>
                       </li>
                     ))}
                   </ul>
@@ -197,7 +197,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="flex items-center text-sm text-gray-400">
               <span>© {new Date().getFullYear()} VogueFlow. Made with</span>
-              <FiHeart className="w-4 h-4 mx-1 text-blue-500 animate-pulse" />
+              <FiHeart className="w-4 h-4 mx-1 text-white animate-pulse" />
               <span>for fashion lovers.</span>
             </div>
 
