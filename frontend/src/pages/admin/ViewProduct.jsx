@@ -36,28 +36,29 @@ const ViewProduct = () => {
   const stockBadgeClass = product.stock === 0 ? 'bg-red-500 text-white' : product.stock < 5 ? 'bg-amber-500 text-gray-900' : 'bg-emerald-500 text-white';
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-6xl">
+      <div className="mb-6 sm:mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">View Product</h1>
-          <p className="text-gray-500 dark:text-gray-400">Review the product details, stock status, variants, and pricing information.</p>
+          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-white">View Product</h1>
+          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">Review the product details, stock status, variants, and pricing information.</p>
         </div>
-        <button onClick={() => navigate('/admin/products')} className="rounded-full border border-gray-300 dark:border-gray-700 px-5 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+        <button onClick={() => navigate('/admin/products')} className="w-full sm:w-auto text-center rounded-full border border-gray-300 dark:border-gray-700 px-5 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
           Back to Products
         </button>
       </div>
 
-      <div className="grid gap-8 xl:grid-cols-[1.4fr_1fr]">
-        <div className="rounded-3xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-          <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 lg:gap-8 lg:grid-cols-[1.4fr_1fr]">
+        <div className="rounded-3xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm">
+          {/* Images Gallery: Swipeable on mobile, Grid on tablet/desktop */}
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-none md:grid md:grid-cols-2 md:overflow-x-visible md:pb-0">
             {product.images?.map((image, idx) => (
-              <div key={idx} className="overflow-hidden rounded-3xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">
-                <img src={image.url} alt={`${product.name}-${idx}`} className="h-56 w-full object-cover" />
+              <div key={idx} className="min-w-[85%] sm:min-w-[45%] md:min-w-0 snap-align-start overflow-hidden rounded-3xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">
+                <img src={image.url} alt={`${product.name}-${idx}`} className="h-48 sm:h-56 w-full object-cover" />
               </div>
             ))}
           </div>
 
-          <div className="mt-8 space-y-6">
+          <div className="mt-6 sm:mt-8 space-y-6">
             <div>
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{product.name}</h2>
               <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{product.description}</p>
@@ -77,13 +78,13 @@ const ViewProduct = () => {
         </div>
 
         <div className="space-y-6">
-          <div className="rounded-3xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-            <div className="flex items-center justify-between gap-4">
+          <div className="rounded-3xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Pricing & Stock</h3>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Current inventory and sale pricing.</p>
               </div>
-              <span className={`rounded-full px-4 py-2 text-sm font-semibold ${stockBadgeClass}`}>{stockBadge}</span>
+              <span className={`self-start sm:self-auto rounded-full px-4 py-2 text-sm font-semibold ${stockBadgeClass}`}>{stockBadge}</span>
             </div>
 
             <div className="mt-6 space-y-4 text-gray-700 dark:text-gray-300">
@@ -106,24 +107,24 @@ const ViewProduct = () => {
             </div>
           </div>
 
-          <div className="rounded-3xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+          <div className="rounded-3xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Variants</h3>
             <div className="mt-4 space-y-3">
               {product.variants?.length ? product.variants.map((variant, idx) => (
                 <div key={idx} className="rounded-3xl border border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-950">
-                  <div className="flex flex-wrap gap-3 text-sm text-gray-600 dark:text-gray-400">
-                    <span><strong>Size:</strong> {variant.size || '—'}</span>
-                    <span><strong>Color:</strong> {variant.color || '—'}</span>
-                    <span><strong>Storage:</strong> {variant.storage || '—'}</span>
-                    <span><strong>Stock:</strong> {variant.stock}</span>
-                    <span><strong>Diff:</strong> {variant.priceDifference ? formatCurrency(variant.priceDifference) : '—'}</span>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-400 sm:flex sm:flex-wrap sm:gap-6">
+                    <span className="flex justify-between sm:block"><strong>Size:</strong> <span className="ml-1 text-gray-900 dark:text-gray-200">{variant.size || '—'}</span></span>
+                    <span className="flex justify-between sm:block"><strong>Color:</strong> <span className="ml-1 text-gray-900 dark:text-gray-200">{variant.color || '—'}</span></span>
+                    <span className="flex justify-between sm:block"><strong>Storage:</strong> <span className="ml-1 text-gray-900 dark:text-gray-200">{variant.storage || '—'}</span></span>
+                    <span className="flex justify-between sm:block"><strong>Stock:</strong> <span className="ml-1 text-gray-900 dark:text-gray-200">{variant.stock}</span></span>
+                    <span className="flex justify-between sm:block col-span-2 sm:col-span-1 border-t border-gray-100 dark:border-gray-900 pt-2 sm:border-t-0 sm:pt-0"><strong>Price Diff:</strong> <span className="ml-1 text-gray-900 dark:text-gray-200">{variant.priceDifference ? formatCurrency(variant.priceDifference) : '—'}</span></span>
                   </div>
                 </div>
               )) : <p className="text-sm text-gray-500 dark:text-gray-400">No variants added.</p>}
             </div>
           </div>
 
-          <div className="rounded-3xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+          <div className="rounded-3xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">SEO</h3>
             <div className="mt-4 text-gray-700 dark:text-gray-300 space-y-3 text-sm">
               <div>

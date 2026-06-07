@@ -122,231 +122,191 @@ const Products = () => {
   const visibleProducts = products?.slice(0, 15);
 
   return (
-    <div className="mx-auto px-0 pt-0 pb-4 max-w-full">
-      <div className="grid gap-3 lg:grid-cols-[280px_minmax(0,1fr)] items-start">
+    <div className="mx-auto px-4 pt-4 pb-6 max-w-full">
+      <div className="flex flex-col gap-6">
         
-        {/* Sidebar Filters */}
-        <div className="w-full">
-            <div className="lg:hidden mb-4">
-                <button
-                    onClick={() => setShowMobileFilters((prev) => !prev)}
-                    className="w-full py-2.5 px-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-semibold text-gray-800 dark:text-gray-200 shadow-sm hover:shadow-md transition"
+        {/* Page Title / Search Results Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+          <h2 className="text-xl sm:text-2xl font-black uppercase tracking-wider text-gray-900 dark:text-white">
+            {keywordFromUrl ? `Search results for "${keywordFromUrl}"` : 'All Products'}
+          </h2>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            Showing {filteredProductsCount} of {productsCount} products
+          </span>
+        </div>
+
+        {/* Top Filters Bar */}
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+          <div className="flex flex-wrap gap-4 items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span className="text-xs sm:text-sm font-black uppercase tracking-widest text-gray-900 dark:text-white">Filters</span>
+              <button onClick={clearFilters} className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-pink-600 hover:text-pink-500 transition">Clear All</button>
+            </div>
+            
+            <div className="flex flex-wrap gap-3 sm:gap-4 items-center">
+              {/* Category Filter */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-gray-500">Category</span>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs py-1.5 px-2.5 text-gray-800 dark:text-gray-200 focus:outline-none"
                 >
-                    {showMobileFilters ? 'Hide Filters' : 'Show Filters'}
-                </button>
+                  <option value="">All Categories</option>
+                  {categories?.map((c) => (
+                    <option key={c._id} value={c._id}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Price Filter */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-gray-500">Price</span>
+                <select
+                  value={
+                    price[0] === 0 && price[1] === 25000 ? "" :
+                    price[0] === 0 && price[1] === 1000 ? "under-1000" :
+                    price[0] === 1000 && price[1] === 3000 ? "1000-3000" :
+                    price[0] === 3000 && price[1] === 5000 ? "3000-5000" :
+                    price[0] === 5000 && price[1] === 25000 ? "over-5000" : "custom"
+                  }
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === "") setPrice([0, 25000]);
+                    else if (val === "under-1000") setPrice([0, 1000]);
+                    else if (val === "1000-3000") setPrice([1000, 3000]);
+                    else if (val === "3000-5000") setPrice([3000, 5000]);
+                    else if (val === "over-5000") setPrice([5000, 25000]);
+                  }}
+                  className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs py-1.5 px-2.5 text-gray-800 dark:text-gray-200 focus:outline-none"
+                >
+                  <option value="">All Prices</option>
+                  <option value="under-1000">Under ₹1,000</option>
+                  <option value="1000-3000">₹1,000 - ₹3,050</option>
+                  <option value="3000-5000">₹3,000 - ₹5,000</option>
+                  <option value="over-5000">Over ₹5,000</option>
+                  {(price[0] !== 0 || price[1] !== 25000) && (
+                    <option value="custom" disabled>Custom (₹{price[0]} - ₹{price[1]})</option>
+                  )}
+                </select>
+              </div>
+
+              {/* Rating Filter */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-gray-500">Rating</span>
+                <select
+                  value={ratings}
+                  onChange={(e) => setRatings(Number(e.target.value))}
+                  className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs py-1.5 px-2.5 text-gray-800 dark:text-gray-200 focus:outline-none"
+                >
+                  <option value={0}>All Ratings</option>
+                  <option value={4}>4★ & Above</option>
+                  <option value={3}>3★ & Above</option>
+                  <option value={2}>2★ & Above</option>
+                  <option value={1}>1★ & Above</option>
+                </select>
+              </div>
+
+              {/* Discount Filter */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-gray-500">Discount</span>
+                <select
+                  value={selectedDiscount}
+                  onChange={(e) => setSelectedDiscount(e.target.value)}
+                  className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs py-1.5 px-2.5 text-gray-800 dark:text-gray-200 focus:outline-none"
+                >
+                  <option value="">All Discounts</option>
+                  {discountOptions.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Sort Filter */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-gray-500">Sort By</span>
+                <select
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value)}
+                  className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs py-1.5 px-2.5 text-gray-800 dark:text-gray-200 focus:outline-none"
+                >
+                  {sortOptions.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </div>
+
             </div>
-            <div className={`${showMobileFilters ? 'block' : 'hidden'} lg:block bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 lg:sticky lg:top-8`}> 
-                <div className="flex flex-col gap-4 mb-6">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Filters</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">A premium set of discovery tools for smart shopping.</p>
-                        </div>
-                        <button onClick={clearFilters} className="text-sm font-semibold text-primary-600 dark:text-primary-400 hover:underline">Clear All</button>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                        {sortOptions.map((option) => (
-                            <motion.button
-                                key={option.value}
-                                whileHover={{ y: -2, scale: 1.02 }}
-                                transition={{ type: 'spring', stiffness: 280 }}
-                                onClick={() => setSort(option.value)}
-                                className={`rounded-full px-3 py-2 text-xs font-semibold transition ${sort === option.value ? 'bg-primary-600 text-white shadow-lg' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800'}`}
-                            >
-                                {option.label}
-                            </motion.button>
-                        ))}
-                    </div>
-                    <div className="block lg:hidden">
-                        <label className="sr-only" htmlFor="mobile-sort">Sort by</label>
-                        <select
-                            id="mobile-sort"
-                            value={sort}
-                            onChange={(e) => setSort(e.target.value)}
-                            className="w-full rounded-2xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-200 py-3 px-4"
-                        >
-                            {sortOptions.map((option) => (
-                                <option key={option.value} value={option.value}>{option.label}</option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-
-                <div className="space-y-6">
-                    {/* Price Filter */}
-                    <div className="rounded-3xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-950 p-5">
-                        <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-4">Price Range</h4>
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between text-sm font-semibold text-gray-600 dark:text-gray-400">
-                                <span>Min: ₹{price[0]}</span>
-                                <span>Max: ₹{price[1]}</span>
-                            </div>
-                            <div className="space-y-3">
-                                <div>
-                                    <label className="block text-[10px] uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 mb-2">Minimum</label>
-                                    <input
-                                        type="range"
-                                        min="0"
-                                        max="10000"
-                                        step="100"
-                                        value={price[0]}
-                                        onChange={(e) => handlePriceChange(e, 0)}
-                                        className="w-full h-1 rounded-full accent-primary-600 bg-gray-200 dark:bg-gray-700 cursor-pointer"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-[10px] uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 mb-2">Maximum</label>
-                                    <input
-                                        type="range"
-                                        min="0"
-                                        max="10000"
-                                        step="100"
-                                        value={price[1]}
-                                        onChange={(e) => handlePriceChange(e, 1)}
-                                        className="w-full h-1 rounded-full accent-primary-600 bg-gray-200 dark:bg-gray-700 cursor-pointer"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Categories */}
-                    <div className="rounded-3xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-950 p-5">
-                        <div className="flex items-center justify-between mb-4">
-                            <h4 className="font-semibold text-gray-800 dark:text-gray-200">Categories</h4>
-                            <span className="text-xs text-gray-500 dark:text-gray-400">Dropdown select</span>
-                        </div>
-                        <select
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                            className="w-full rounded-2xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-200 py-3 px-4"
-                        >
-                            <option value="">All Categories</option>
-                            {categories?.map((c) => (
-                                <option key={c._id} value={c._id}>{c.name}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {/* Ratings Filter */}
-                    <div className="rounded-3xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-950 p-5">
-                        <div className="flex items-center justify-between mb-4">
-                            <h4 className="font-semibold text-gray-800 dark:text-gray-200">Minimum Rating</h4>
-                            <span className="text-xs text-gray-500 dark:text-gray-400">Dropdown select</span>
-                        </div>
-                        <select
-                            value={ratings}
-                            onChange={(e) => setRatings(Number(e.target.value))}
-                            className="w-full rounded-2xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-200 py-3 px-4"
-                        >
-                            <option value={0}>All Ratings</option>
-                            <option value={4}>4 Stars & Above</option>
-                            <option value={3}>3 Stars & Above</option>
-                            <option value={2}>2 Stars & Above</option>
-                            <option value={1}>1 Star & Above</option>
-                        </select>
-                    </div>
-
-                    {/* Brand Filters */}
-                    {/* Discount Filters */}
-                    <div className="rounded-3xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-950 p-5">
-                        <div className="flex items-center justify-between mb-4">
-                            <h4 className="font-semibold text-gray-800 dark:text-gray-200">Discount</h4>
-                            <span className="text-xs text-gray-500 dark:text-gray-400">Select range</span>
-                        </div>
-                        <select
-                            value={selectedDiscount}
-                            onChange={(e) => setSelectedDiscount(e.target.value)}
-                            className="w-full rounded-2xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-200 py-3 px-4"
-                        >
-                            <option value="">All Discounts</option>
-                            {discountOptions.map((option) => (
-                                <option key={option} value={option}>{option}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {/* Collection filter UI removed */}
-                </div>
-            </div>
+          </div>
         </div>
 
         {/* Product Grid */}
         <div className="w-full">
-<div className="flex flex-col gap-2 justify-between items-start mb-4 md:items-center md:mb-6">
-                <div>
-                    <h2 className="text-2xl font-bold text-white">
-                        {keywordFromUrl ? `Search results for "${keywordFromUrl}"` : 'All Products'}
-                    </h2>
+          {error && !loading && products.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-20 bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-150 dark:border-gray-700"
+            >
+              <h3 className="text-2xl text-gray-600 dark:text-gray-300 font-medium">Unable to load products</h3>
+              <p className="mt-2 text-gray-500 dark:text-gray-400">{error}</p>
+              <button onClick={clearFilters} className="mt-6 px-6 py-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition">Reset Filters</button>
+            </motion.div>
+          ) : loading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-6">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                <div key={n} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-150 dark:border-gray-700 p-4 h-96 flex flex-col">
+                  <Skeleton height={200} className="mb-4 rounded-xl dark:opacity-20" />
+                  <Skeleton count={2} className="mb-2 dark:opacity-20" />
+                  <Skeleton width="40%" className="mt-auto dark:opacity-20" />
                 </div>
+              ))}
             </div>
-
-            {error && !loading && products.length === 0 ? (
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-center py-20 bg-white dark:bg-gray-800 square-2xl shadow-sm border border-gray-100 dark:border-gray-700"
-                >
-                    <h3 className="text-2xl text-gray-600 dark:text-gray-300 font-medium">Unable to load products</h3>
-                    <p className="mt-2 text-gray-500 dark:text-gray-400">{error}</p>
-                    <button onClick={clearFilters} className="mt-6 px-6 py-2 bg-primary-600 text-white square-full hover:bg-primary-700 transition">Reset Filters</button>
+          ) : !products || products?.length === 0 ? (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-20 bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-150 dark:border-gray-700"
+            >
+              <h3 className="text-2xl text-gray-600 dark:text-gray-400 font-medium">No products match your filters.</h3>
+              <p className="mt-2 text-gray-500">Try adjusting your price range or categories.</p>
+              <button onClick={clearFilters} className="mt-6 px-6 py-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition">Clear Filters</button>
+            </motion.div>
+          ) : (
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4"
+            >
+              {visibleProducts?.map((product) => (
+                <motion.div key={product._id} variants={itemVariants}>
+                  <ProductCard product={product} />
                 </motion.div>
-            ) : loading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-                    <div key={n} className="bg-white dark:bg-gray-800 square-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 h-96 flex flex-col">
-                        <Skeleton height={200} className="mb-4 square-xl dark:opacity-20" />
-                        <Skeleton count={2} className="mb-2 dark:opacity-20" />
-                        <Skeleton width="40%" className="mt-auto dark:opacity-20" />
-                    </div>
-                    ))}
-                </div>
-            ) : !products || products?.length === 0 ? (
-                <motion.div 
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-center py-20 bg-white dark:bg-gray-800 square-2xl shadow-sm border border-gray-100 dark:border-gray-700"
-                >
-                    <h3 className="text-2xl text-gray-600 dark:text-gray-400 font-medium">No products match your filters.</h3>
-                    <p className="mt-2 text-gray-500">Try adjusting your price range or categories.</p>
-                    <button onClick={clearFilters} className="mt-6 px-6 py-2 bg-primary-600 text-white square-full hover:bg-primary-700 transition">Clear Filters</button>
-                </motion.div>
-            ) : (
-                <motion.div 
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="show"
-                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4"
-                >
-                    {visibleProducts?.map((product) => (
-                    <motion.div key={product._id} variants={itemVariants}>
-                        <ProductCard product={product} />
-                    </motion.div>
-                    ))}
-                </motion.div>
-            )}
-            
-            {/* Simple Pagination - Next/Prev */}
-            {productsCount > resultPerPage && (
-                <div className="flex justify-center mt-10 space-x-4">
-                    <button 
-                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                        disabled={currentPage === 1}
-                        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition"
-                    >
-                        Previous
-                    </button>
-                    <span className="flex items-center px-4 py-2 text-sm text-white">Page {currentPage}</span>
-                    <button 
-                        onClick={() => setCurrentPage(prev => prev + 1)}
-                        disabled={currentPage * resultPerPage >= productsCount}
-                        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition"
-                    >
-                        Next
-                    </button>
-                </div>
-            )}
+              ))}
+            </motion.div>
+          )}
+          
+          {/* Simple Pagination - Next/Prev */}
+          {productsCount > resultPerPage && (
+            <div className="flex justify-center mt-10 space-x-4">
+              <button 
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-750 dark:text-gray-250 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition"
+              >
+                Previous
+              </button>
+              <span className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300">Page {currentPage}</span>
+              <button 
+                onClick={() => setCurrentPage(prev => prev + 1)}
+                disabled={currentPage * resultPerPage >= productsCount}
+                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-750 dark:text-gray-250 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
 
       </div>

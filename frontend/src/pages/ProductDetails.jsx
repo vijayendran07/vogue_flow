@@ -200,6 +200,14 @@ const ProductDetails = () => {
     }
   };
 
+  const handleWriteReviewClick = () => {
+    if (!user) {
+      toast.error('Login to draft a review');
+      return;
+    }
+    setShowReviewModal(true);
+  };
+
   const submitReviewHandler = () => {
     if (rating === 0) {
       toast.error('Please select a rating');
@@ -755,7 +763,7 @@ const ProductDetails = () => {
           <div className="text-center py-16 px-4 bg-[#131c31]/20 rounded-3xl border border-dashed border-white/10">
             <p className="text-gray-400 font-medium mb-3">Be the first to curate your experience</p>
             <button 
-              onClick={() => setShowReviewModal(true)}
+              onClick={handleWriteReviewClick}
               className="px-6 py-2.5 bg-white text-gray-900 rounded-full text-xs font-bold shadow hover:scale-105 transition">
               Draft a Review
             </button>
@@ -765,7 +773,7 @@ const ProductDetails = () => {
         {localReviews && localReviews.length > 0 && (
           <div className="text-center mt-10">
             <button 
-              onClick={() => setShowReviewModal(true)}
+              onClick={handleWriteReviewClick}
               className="px-8 py-3 bg-white text-gray-900 rounded-full text-sm font-bold shadow-lg hover:shadow-xl transition">
               Write a Review
             </button>

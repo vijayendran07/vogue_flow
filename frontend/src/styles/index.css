@@ -1,6 +1,17 @@
 @import "tailwindcss";
 @config "../../tailwind.config.js";
 
+/* Global Calibri Font Family */
+* {
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif !important;
+}
+
+/* Remove bold weights globally to make everything normal weight */
+h1, h2, h3, h4, h5, h6, strong, b, button, a, span, div, p,
+.font-bold, .font-extrabold, .font-black, .font-semibold,
+[class*="font-bold"], [class*="font-semibold"], [class*="font-extrabold"], [class*="font-black"] {
+  font-weight: 400 !important;
+}
 
 @layer base {
   body {

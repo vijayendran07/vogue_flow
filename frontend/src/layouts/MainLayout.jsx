@@ -18,35 +18,36 @@ const MainLayout = () => {
         </div>
 
         {/* Content Container */}
-        <div className="flex-1 overflow-y-auto pt-32 sm:pt-24">
-          <AnimatePresence mode="wait">
-            <motion.main
-              key={location.pathname}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-              className={`min-h-full w-full bg-white dark:bg-gray-950 transition-colors duration-300 ${
-                location.pathname === '/' ||
-                location.pathname.startsWith('/product/') ||
-                location.pathname === '/wishlist' ||
-                location.pathname === '/cart' ||
-                location.pathname === '/checkout' ||
-                location.pathname === '/order-success'
-                  ? 'px-0 py-0'
-                  : location.pathname === '/products'
-                  ? 'px-4 lg:px-6 pt-0 pb-6'
-                  : 'px-4 lg:px-6 py-6'
-              }`}
-            >
-              <Outlet />
-            </motion.main>
-          </AnimatePresence>
-        </div>
-
-        {/* Footer */}
-        <div className="flex-shrink-0">
-          <Footer />
+        <div className="flex-1 overflow-y-auto pt-20 lg:pt-24 pb-20 lg:pb-0 flex flex-col justify-between">
+          <div className="w-full flex-grow">
+            <AnimatePresence mode="wait">
+              <motion.main
+                key={location.pathname}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
+                className={`min-h-full w-full bg-white dark:bg-gray-950 transition-colors duration-300 ${
+                  location.pathname === '/' ||
+                  location.pathname.startsWith('/product/') ||
+                  location.pathname === '/wishlist' ||
+                  location.pathname === '/cart' ||
+                  location.pathname === '/checkout' ||
+                  location.pathname === '/order-success'
+                    ? 'px-0 py-0'
+                    : location.pathname === '/products'
+                    ? 'px-4 lg:px-6 pt-0 pb-6'
+                    : 'px-4 lg:px-6 py-6'
+                }`}
+              >
+                <Outlet />
+              </motion.main>
+            </AnimatePresence>
+          </div>
+          {/* Footer inside the scrollable container */}
+          <div className="w-full mt-auto">
+            <Footer />
+          </div>
         </div>
       </div>
 

@@ -15,15 +15,23 @@ app.use(compression());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
-const allowedOrigins = [
-    process.env.FRONTEND_URL,
-    'http://localhost:5173',
-    'http://localhost:5180'
-].filter(Boolean);
-
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (!origin) {
+            callback(null, true);
+            return;
+        }
+
+        const currentAllowedOrigins = [
+            process.env.FRONTEND_URL,
+            'http://localhost:5173',
+            'http://localhost:5180'
+        ].filter(Boolean);
+
+        // Allow any local network IP origin (e.g., 192.168.x.x, 10.x.x.x, 172.16.x.x to 172.31.x.x)
+        const isLocalIp = /^http:\/\/(localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[0-1])\.\d+\.\d+)(:\d+)?$/.test(origin);
+
+        if (currentAllowedOrigins.includes(origin) || isLocalIp) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));

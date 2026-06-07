@@ -150,7 +150,7 @@ const ProductCard = React.memo(({ product, isHome }) => {
               {/* Bottom gradient and Brand name inside the image */}
               <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/75 via-black/25 to-transparent pointer-events-none" />
               <div className="absolute bottom-4 left-4 z-10 pointer-events-none">
-                <span className="text-sm sm:text-base font-black tracking-widest text-white uppercase drop-shadow-md block font-sans">
+                <span className="text-xs font-black tracking-widest text-white uppercase drop-shadow-md block font-sans">
                   {brandName}
                 </span>
               </div>
@@ -171,10 +171,10 @@ const ProductCard = React.memo(({ product, isHome }) => {
 
             {/* Content Section Underneath */}
             <div className="pt-3 pb-2 flex flex-col space-y-0.5 text-left bg-transparent">
-              <h3 className="text-xs sm:text-sm font-black text-gray-900 dark:text-white leading-tight tracking-wide group-hover:text-pink-500 dark:group-hover:text-pink-400 transition-colors duration-200">
+              <h3 className="text-xs font-black text-gray-900 dark:text-white leading-tight tracking-wide group-hover:text-pink-500 dark:group-hover:text-pink-400 transition-colors duration-200">
                 {getPromoOffer()}
               </h3>
-              <p className="text-[10px] sm:text-[11px] text-gray-500 dark:text-gray-400 font-bold truncate leading-normal">
+              <p className="text-[10px] text-gray-550 dark:text-gray-400 font-bold truncate leading-normal">
                 {getPromoSubtitle()}
               </p>
             </div>
@@ -231,12 +231,12 @@ const ProductCard = React.memo(({ product, isHome }) => {
         {/* Content Section Underneath */}
         <div className="pt-3.5 px-1.5 flex flex-col space-y-1.5 text-left flex-grow">
           {/* Brand Name */}
-          <p className="text-[10px] font-black uppercase tracking-widest text-[#B58A63] font-sans">
+          <p className="text-[10px] sm:text-sm font-black uppercase tracking-widest text-[#B58A63] font-sans">
             {product.brand || 'VOGUEFLOW'}
           </p>
 
           {/* Product Name */}
-          <h3 className="text-xs sm:text-sm font-bold text-gray-800 dark:text-gray-200 truncate leading-tight group-hover:text-[#B58A63] transition-colors">
+          <h3 className="text-xs sm:text-[15px] font-bold text-gray-800 dark:text-gray-200 truncate leading-tight group-hover:text-[#B58A63] transition-colors">
             {product.name}
           </h3>
 
@@ -244,25 +244,25 @@ const ProductCard = React.memo(({ product, isHome }) => {
           <div className="flex items-center flex-wrap pt-0.5">
             {product.discountPrice && product.discountPrice < product.price ? (
               <>
-                <span className="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white">
+                <span className="text-sm sm:text-[17px] font-extrabold text-gray-900 dark:text-white">
                   {formatCurrency(product.discountPrice)}
                 </span>
-                <span className="text-xs text-gray-400 line-through font-medium ml-1.5">
+                <span className="text-[10px] sm:text-sm text-gray-400 line-through font-medium ml-1.5">
                   {formatCurrency(product.price)}
                 </span>
-                <span className="text-xs text-red-500 font-extrabold ml-2">
+                <span className="text-[10px] sm:text-sm text-red-500 font-extrabold ml-2">
                   {discountPercentage}% OFF
                 </span>
               </>
             ) : (
-              <span className="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white">
+              <span className="text-sm sm:text-[17px] font-extrabold text-gray-900 dark:text-white">
                 {formatCurrency(product.price)}
               </span>
             )}
           </div>
 
           {/* Rating */}
-          <div className="flex items-center gap-1 text-[11px] font-bold text-gray-500 dark:text-gray-400 pb-1">
+          <div className="flex items-center gap-1 text-[10px] sm:text-sm font-bold text-gray-500 dark:text-gray-400 pb-1">
             <span className="text-amber-500">★</span>
             <span>{product.ratings || '4.5'}</span>
             <span className="text-gray-400">({product.numOfReviews || '42'})</span>
@@ -271,7 +271,7 @@ const ProductCard = React.memo(({ product, isHome }) => {
           {/* Add to Bag Button */}
           <button
             onClick={handleAddToCart}
-            className="w-full mt-2.5 bg-gray-950 hover:bg-gray-900 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-950 py-3 rounded-[14px] text-xs font-black uppercase tracking-widest shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 pointer-events-auto"
+            className="w-full mt-2 bg-gray-950 hover:bg-gray-900 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-950 py-2.5 sm:py-3 rounded-[12px] sm:rounded-[14px] text-[10px] sm:text-[13px] font-black uppercase tracking-widest shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 pointer-events-auto"
           >
             <FiShoppingBag className="w-3.5 h-3.5" />
             <span>Add to Bag</span>

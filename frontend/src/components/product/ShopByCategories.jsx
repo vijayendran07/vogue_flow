@@ -12,18 +12,18 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
   const isEven = index % 2 === 0;
 
   return (
-    <section className={`w-full px-4 lg:px-6 py-6 mb-0 border-t border-gray-100 dark:border-gray-800 ${
+    <section className={`w-full px-4 lg:px-6 py-3 sm:py-4 mb-0 border-t border-gray-100 dark:border-gray-800 ${
       isEven 
         ? 'bg-white text-gray-900 dark:bg-gray-900 dark:text-white' 
         : 'bg-[#f8f9fa] text-gray-900 dark:bg-gray-950 dark:text-white'
     }`}>
       <div className="max-w-full">
         
-        {/* ── Category Header (Line Removed) ── */}
-        <div className="flex items-center justify-between pb-3 mb-4">
-          <div className="flex items-center gap-4">
+        {/* ── Category Header ── */}
+        <div className="flex items-center justify-between pb-1.5 mb-2">
+          <div className="flex items-center gap-3">
             {/* Thumbnail */}
-            <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex-shrink-0 shadow-sm">
+            <div className="w-7 h-7 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex-shrink-0 shadow-sm">
               <img
                 src={optimizeUnsplashUrl(category.image?.url || fallbackImage, 80)}
                 alt={category.name}
@@ -34,12 +34,12 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
 
             {/* Title + count */}
             <div>
-              <h3 className={`text-xl sm:text-2xl font-black leading-tight ${
+              <h3 className={`text-sm font-black uppercase tracking-wider leading-tight ${
                 isEven ? 'text-gray-900 dark:text-white' : 'text-gray-900 dark:text-white'
               }`}>
                 {category.name}
               </h3>
-              <p className={`text-xs mt-0.5 ${
+              <p className={`text-[10px] mt-0.5 ${
                 isEven ? 'text-gray-500 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'
               }`}>
                 {categoryProducts.length} product{categoryProducts.length !== 1 ? 's' : ''}
@@ -50,11 +50,11 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
           {/* Explore link */}
           <Link
             to={`/products?category=${category._id}`}
-            className={`flex items-center gap-1.5 text-sm font-bold hover:underline whitespace-nowrap ${
+            className={`flex items-center gap-1.5 text-xs font-bold hover:underline whitespace-nowrap ${
               isEven ? 'text-pink-600 dark:text-pink-400' : 'text-pink-600 dark:text-pink-400'
             }`}
           >
-            View All <FiArrowRight className="w-4 h-4" />
+            View All <FiArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
@@ -83,9 +83,9 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
           </button>
 
           {/* Products Row */}
-          <div className="category-slider flex gap-6 overflow-x-auto scroll-smooth hide-scrollbar pb-2">
+          <div className="category-slider flex gap-3 sm:gap-4 overflow-x-auto scroll-smooth hide-scrollbar pb-2">
             {categoryProducts.map((product) => (
-              <div key={product._id} className="w-[180px] sm:w-[220px] md:w-[240px] lg:w-[260px] flex-shrink-0">
+              <div key={product._id} className="w-[135px] sm:w-[170px] md:w-[195px] lg:w-[215px] flex-shrink-0">
                 <ProductCard product={product} isHome={true} />
               </div>
             ))}
@@ -211,15 +211,15 @@ const ShopByCategories = ({
                   
 
                   {showCouponAfterThis && (
-                    <section className="w-full mb-0 overflow-hidden relative">
+                    <section className="w-full mb-0 overflow-hidden relative px-4 lg:px-6 py-2">
                       <Link
                         to="/products"
-                        className="relative block h-[450px] sm:h-[360px] group"
+                        className="relative block w-full group overflow-hidden rounded-xl shadow-sm"
                       >
                         <img
                           src={optimizeUnsplashUrl(activeCoupon?.bgImage?.url || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1600&auto=format&fit=crop", 1000)}
                           alt="Fashion Coupon Banner"
-                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
+                          className="w-full h-auto object-contain block group-hover:scale-[1.01] transition-transform duration-500"
                           loading="lazy"
                         />
                       </Link>

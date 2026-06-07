@@ -171,7 +171,7 @@ const Home = () =>{
             slidesPerView={1}
             autoplay={{ delay: 4000, disableOnInteraction: false }}
             pagination={{ clickable: true }}
-            className="w-full aspect-[16/9] sm:aspect-[25/8]">
+            className="w-full aspect-[25/8]">
             {(banners && banners.length > 0 ? banners : heroBanners).map((banner) => {
               const bgImgUrl = optimizeUnsplashUrl(typeof banner.bgImage === 'string' ? banner.bgImage : banner.bgImage?.url, 1200);
               return (
@@ -217,7 +217,7 @@ const Home = () =>{
                       />
                     </div>
                   </div>
-                  <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-gray-700 dark:text-gray-300 line-clamp-1 max-w-[72px] text-center">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-gray-700 dark:text-gray-300 line-clamp-1 max-w-[72px] text-center">
                     {category.name}
                   </span>
                 </Link>
@@ -306,7 +306,7 @@ const Home = () =>{
 
       <div>
         
-        <h2 className="text-lg text-black-500 dark:text-black-900 font-bold mt-2">
+        <h2 className="text-lg text-gray-900 dark:text-white font-bold mt-2">
         
           Popular Searches
         
