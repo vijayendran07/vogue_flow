@@ -280,7 +280,7 @@ const Products = () => {
               className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4"
             >
               {visibleProducts?.map((product) => (
-                <motion.div key={product._id} variants={itemVariants}>
+                <motion.div key={product._id} variants={itemVariants} className="h-full">
                   <ProductCard product={product} />
                 </motion.div>
               ))}

@@ -185,14 +185,7 @@ const ProductCard = React.memo(({ product, isHome }) => {
   }
 
   return (
-    <motion.div
-      variants={cardVariants}
-      initial="initial"
-      animate="animate"
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.3 }}
-      className="h-full block select-none"
-    >
+    <div className="h-full block select-none">
       <Link
         to={`/product/${product._id}`}
         aria-label={`View details for ${product.name}`}
@@ -278,7 +271,7 @@ const ProductCard = React.memo(({ product, isHome }) => {
           </button>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 });
 
