@@ -138,13 +138,11 @@ const ProductCard = React.memo(({ product, isHome }) => {
           >
             {/* Aspect Square Image Container */}
             <div className="relative w-full overflow-hidden bg-gray-50/50 dark:bg-gray-950/50 flex-shrink-0 aspect-square">
-              <motion.img
+              <img
                 loading="lazy"
                 src={product.images && product.images[0]?.url ? optimizeUnsplashUrl(product.images[0].url, 400) : 'https://via.placeholder.com/300x300'}
                 alt={product.name}
-                className="h-full w-full object-cover object-center"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
               />
 
               {/* Bottom gradient and Brand name inside the image */}
@@ -193,13 +191,11 @@ const ProductCard = React.memo(({ product, isHome }) => {
       >
         {/* Aspect Ratio Image Container */}
         <div className="relative w-full overflow-hidden bg-gray-50/50 dark:bg-gray-950/50 rounded-[20px] aspect-[3/4]">
-          <motion.img
+          <img
             loading="lazy"
             src={product.images && product.images[0]?.url ? optimizeUnsplashUrl(product.images[0].url, 400) : 'https://via.placeholder.com/300x400'}
             alt={product.name}
-            className="h-full w-full object-cover object-center"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
           />
 
           {/* NEW Badge overlay on Image */}
