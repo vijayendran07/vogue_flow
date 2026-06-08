@@ -34,12 +34,12 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
 
             {/* Title + count */}
             <div>
-              <h3 className={`text-3xl md:text-5xl lg:text-6xl font-black uppercase tracking-widest leading-tight ${
+              <h3 className={`text-sm font-black uppercase tracking-wider leading-tight ${
                 isEven ? 'text-gray-900 dark:text-white' : 'text-gray-900 dark:text-white'
               }`}>
                 {category.name}
               </h3>
-              <p className={`text-sm sm:text-base font-bold tracking-[0.2em] uppercase mt-2 ${
+              <p className={`text-[10px] font-bold tracking-wider uppercase mt-1 ${
                 isEven ? 'text-gray-500 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'
               }`}>
                 {categoryProducts.length} product{categoryProducts.length !== 1 ? 's' : ''}
