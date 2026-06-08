@@ -181,7 +181,7 @@ const Cart = () => {
                                         to="/products"
                                         className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-black text-white dark:bg-white dark:text-black font-bold rounded-full text-xs uppercase tracking-wider shadow-lg hover:shadow-xl transition"
                                     >
-                                        <span>Explore Master Catalog</span>
+                                        <span>Explore Products</span>
                                         <FiArrowRight className="w-4 h-4" />
                                     </Link>
                                 </motion.div>
