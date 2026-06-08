@@ -137,15 +137,8 @@ const Navbar = () => {
           
           {/* Desktop Navbar View */}
           <div className="hidden lg:flex items-center justify-between h-20">
-            {/* Left: Logo & Menu Links */}
+            {/* Left: Menu Links */}
             <div className="flex items-center h-full">
-              <Link to="/" className="flex-shrink-0 flex items-center group select-none mr-3 sm:mr-8">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 bg-pink-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-lg sm:text-xl font-black text-white tracking-tight">
-                    V
-                  </span>
-                </div>
-              </Link>
 
               {/* Desktop Navigation Links */}
               <div className="hidden lg:flex items-center h-full">
@@ -258,6 +251,15 @@ const Navbar = () => {
                   </span>
                 )}
               </Link>
+              
+              {/* Logo (Moved to Right) */}
+              <Link to="/" className="flex-shrink-0 flex items-center group select-none ml-2 sm:ml-4">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 bg-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <span className="text-lg sm:text-xl font-black text-white tracking-tight">
+                    V
+                  </span>
+                </div>
+              </Link>
             </div>
           </div>
 
@@ -271,13 +273,6 @@ const Navbar = () => {
             >
               <FiMenu className="w-6 h-6" />
             </button>
-
-            {/* Logo Icon */}
-            <Link to="/" className="flex items-center group select-none flex-shrink-0">
-              <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center shadow-md">
-                <span className="text-base font-black text-white tracking-tight">V</span>
-              </div>
-            </Link>
 
             {/* Mobile Search Input */}
             <div className="flex-1 min-w-0 relative pr-1">
@@ -294,6 +289,13 @@ const Navbar = () => {
                 </div>
               </form>
             </div>
+
+            {/* Logo Icon (Moved to Right) */}
+            <Link to="/" className="flex items-center group select-none flex-shrink-0 pl-1">
+              <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center shadow-md">
+                <span className="text-base font-black text-white tracking-tight">V</span>
+              </div>
+            </Link>
           </div>
 
         </div>
