@@ -20,10 +20,10 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
       <div className="max-w-full">
         
         {/* ── Category Header ── */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between pb-4 mb-6 gap-4">
           <div className="flex items-center gap-6">
             {/* Thumbnail */}
-            <div className="w-20 sm:w-28 h-20 sm:h-28 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex-shrink-0 shadow-sm">
+            <div className="w-14 sm:w-20 h-14 sm:h-20 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex-shrink-0 shadow-sm">
               <img
                 src={optimizeUnsplashUrl(category.image?.url || fallbackImage, 200)}
                 alt={category.name}
