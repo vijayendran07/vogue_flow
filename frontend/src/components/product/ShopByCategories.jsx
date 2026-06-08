@@ -211,7 +211,7 @@ const ShopByCategories = ({
                   
 
                   {showCouponAfterThis && (
-                    <section className="w-full relative my-6">
+                    <section className="w-full relative">
                       <Link
                         to="/products"
                         className="block w-full overflow-hidden group"
@@ -219,7 +219,7 @@ const ShopByCategories = ({
                         <img
                           src={optimizeUnsplashUrl(activeCoupon?.bgImage?.url || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1600&auto=format&fit=crop", 1600)}
                           alt="Fashion Coupon Banner"
-                          className="w-full h-auto max-h-[400px] object-cover sm:object-contain bg-gray-100 dark:bg-gray-900 group-hover:opacity-95 transition-opacity duration-300"
+                          className="w-full h-auto object-cover block group-hover:opacity-95 transition-opacity duration-300"
                           loading="lazy"
                         />
                       </Link>
