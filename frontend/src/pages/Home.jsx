@@ -179,9 +179,7 @@ const Home = () =>{
                   <div className="relative w-full h-full group cursor-pointer" onClick={() => navigate('/products')}>
                     <img src={bgImgUrl} alt={banner.title || "VogueFlow Campaign"} className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700" />
                     
-                    <div className="absolute bottom-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 group-hover:bg-white group-hover:text-black transition-colors">
-                      <FiChevronRight className="w-5 h-5" />
-                    </div>
+                    
                   </div>
                 </SwiperSlide>
               );

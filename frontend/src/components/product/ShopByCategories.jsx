@@ -217,7 +217,7 @@ const ShopByCategories = ({
                         className="block w-full overflow-hidden group"
                       >
                         <img
-                          src={optimizeUnsplashUrl(activeCoupon?.bgImage?.url || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1600&auto=format&fit=crop", 1600)}
+                          src={optimizeUnsplashUrl(activeCoupon?.bgImage?.url || "/images/coupon-banner.png", 1600)}
                           alt="Fashion Coupon Banner"
                           className="w-full h-auto object-cover block group-hover:opacity-95 transition-opacity duration-300"
                           loading="lazy"
