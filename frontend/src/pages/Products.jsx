@@ -178,11 +178,11 @@ const Products = () => {
         <div className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-md p-4 sm:p-5 rounded-3xl border border-gray-200/50 dark:border-gray-800/50 shadow-sm flex flex-col gap-4">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div className="flex items-center justify-between lg:justify-start gap-4">
-              <h3 className="text-xs font-black uppercase tracking-widest text-gray-950 dark:text-white">Filter By</h3>
+              <h3 className="text-sm font-black uppercase tracking-widest text-gray-950 dark:text-white">Filter By</h3>
               {(category || ratings > 0 || selectedDiscount || price[0] !== 0 || price[1] !== 25000) && (
                 <button
                   onClick={clearFilters}
-                  className="text-xs font-black uppercase tracking-widest text-pink-500 hover:text-pink-600 transition duration-250 cursor-pointer"
+                  className="text-sm font-black uppercase tracking-widest text-pink-500 hover:text-pink-600 transition duration-250 cursor-pointer"
                 >
                   Clear All
                 </button>
@@ -193,11 +193,11 @@ const Products = () => {
             <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3">
               {/* Category */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Category</label>
+                <label className="text-xs font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Category</label>
                 <select
                   value={category}
                   onChange={handleCategoryChange}
-                  className="w-full rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white dark:bg-gray-900 text-xs py-2.5 px-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 transition-colors"
+                  className="w-full rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white dark:bg-gray-900 text-sm py-2.5 px-4 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 transition-colors"
                 >
                   <option value="">All Categories</option>
                   {categories.map((c) => (
@@ -208,7 +208,7 @@ const Products = () => {
 
               {/* Price */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Price Range</label>
+                <label className="text-xs font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Price Range</label>
                 <select
                   value={
                     price[0] === 0 && price[1] === 25000 ? '' :
@@ -218,7 +218,7 @@ const Products = () => {
                     price[0] === 5000 && price[1] === 25000 ? 'over-5000' : 'custom'
                   }
                   onChange={handlePriceRangeChange}
-                  className="w-full rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white dark:bg-gray-900 text-xs py-2.5 px-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 transition-colors"
+                  className="w-full rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white dark:bg-gray-900 text-sm py-2.5 px-4 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 transition-colors"
                 >
                   <option value="">All Prices</option>
                   <option value="under-1000">Under ₹1,000</option>
@@ -233,11 +233,11 @@ const Products = () => {
 
               {/* Rating */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Rating</label>
+                <label className="text-xs font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Rating</label>
                 <select
                   value={ratings}
                   onChange={handleRatingChange}
-                  className="w-full rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white dark:bg-gray-900 text-xs py-2.5 px-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 transition-colors"
+                  className="w-full rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white dark:bg-gray-900 text-sm py-2.5 px-4 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 transition-colors"
                 >
                   <option value={0}>All Ratings</option>
                   <option value={4}>4★ & Above</option>
@@ -249,11 +249,11 @@ const Products = () => {
 
               {/* Discount */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Discount</label>
+                <label className="text-xs font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Discount</label>
                 <select
                   value={selectedDiscount}
                   onChange={handleDiscountChange}
-                  className="w-full rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white dark:bg-gray-900 text-xs py-2.5 px-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 transition-colors"
+                  className="w-full rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white dark:bg-gray-900 text-sm py-2.5 px-4 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 transition-colors"
                 >
                   <option value="">All Discounts</option>
                   {discountOptions.map((opt) => (
@@ -264,11 +264,11 @@ const Products = () => {
 
               {/* Sort By */}
               <div className="flex flex-col gap-1 col-span-2 sm:col-span-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Sort By</label>
+                <label className="text-xs font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Sort By</label>
                 <select
                   value={sort}
                   onChange={handleSortChange}
-                  className="w-full rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white dark:bg-gray-900 text-xs py-2.5 px-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 transition-colors"
+                  className="w-full rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white dark:bg-gray-900 text-sm py-2.5 px-4 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 transition-colors"
                 >
                   {sortOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
