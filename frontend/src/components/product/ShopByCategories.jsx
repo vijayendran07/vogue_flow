@@ -7,7 +7,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import ProductCard from './ProductCard';
 
 // ─── Per-Category Row ──────────────────────────────────────────────────────────
-const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
+const CategoryRow = React.memo(({ category, categoryProducts, fallbackImage, index }) => {
   // Alternate background: Elegant Pure White and Soft Light Gray
   const isEven = index % 2 === 0;
 
@@ -94,7 +94,7 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
       </div>
     </section>
   );
-};
+});
 
 // ─── Main Section ──────────────────────────────────────────────────────────────
 const ShopByCategories = ({
@@ -109,18 +109,22 @@ const ShopByCategories = ({
     categoryImages?.[0] ||
     'https://images.unsplash.com/photo-1596755094514-f87e32f85e2c?auto=format&fit=crop&w=200&q=80';
 
-  // Build a list: category + its products (skip empty ones)
-  const categoryRows = (categories || [])
-    .map((cat) => ({
-      category: cat,
-      categoryProducts: (products || []).filter((p) => {
-        if (Array.isArray(p.category)) {
-          return p.category.some((c) => (c?._id || c) === cat._id);
-        }
-        return p.category?._id === cat._id || p.category === cat._id;
-      }),
-    }))
-    .filter(({ categoryProducts }) => categoryProducts.length > 0);
+// Build a list: category + its products (skip empty ones)
+  const categoryRows = React.useMemo(() => {
+    return (categories || [])
+      .map((cat) => ({
+        category: cat,
+        categoryProducts: (products || [])
+          .filter((p) => {
+            if (Array.isArray(p.category)) {
+              return p.category.some((c) => (c?._id || c) === cat._id);
+            }
+            return p.category?._id === cat._id || p.category === cat._id;
+          })
+          .slice(0, 10), // Limit to 10 products per category to optimize rendering
+      }))
+      .filter(({ categoryProducts }) => categoryProducts.length > 0);
+  }, [categories, products]);
 
   return (
     <div className="w-full">

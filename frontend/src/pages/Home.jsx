@@ -58,7 +58,7 @@ const Home = () =>{
     dispatch(getProducts({
       keyword: '',
       currentPage: 1,
-      limit: 150,
+      limit: 60,
       price: [0, 250000],
       category: '',
       ratings: 0,
