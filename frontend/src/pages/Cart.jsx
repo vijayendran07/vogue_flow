@@ -134,9 +134,7 @@ const Cart = () => {
                     <>
                         {/* Master Title Statement */}
                         <motion.div variants={itemVariants} className="mb-8 lg:mb-12">
-                            <p className="text-xs font-bold text-gray-500 dark:text-gray-400 tracking-widest uppercase mb-1">
-                                Curated Requisition
-                            </p>
+                           
                             <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-gray-950 dark:text-white tracking-tight leading-none">
                                 Review Your Bag
                             </h1>
@@ -165,10 +163,10 @@ const Cart = () => {
 
                                 <div className="space-y-2">
                                     <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-gray-950 dark:text-white">
-                                        Your Requisition is Empty
+                                        Your Bag is Empty
                                     </h2>
                                     <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
-                                        Discover absolute modern utility across our master catalog. Add outstanding items to initiate your personal collection portfolio.
+                                        Discover absolute modern utility across our products. Add outstanding items to your collection.
                                     </p>
                                 </div>
 
