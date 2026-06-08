@@ -172,30 +172,7 @@ const Products = () => {
     <div className="mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16 max-w-[1440px] min-h-screen bg-[#fafafa] dark:bg-gray-950 transition-colors duration-300">
       <div className="flex flex-col gap-8">
         
-        {/* Header section */}
-        <div className="border-b border-gray-200/80 dark:border-gray-800/80 pb-5">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-            <div>
-              <nav className="text-xs text-gray-400 dark:text-gray-500 mb-2 uppercase tracking-widest font-bold">
-                <span>Home</span> <span className="mx-1.5">/</span> <span className="text-gray-900 dark:text-gray-200">Catalog</span>
-              </nav>
-              <h1 className="text-3xl sm:text-4xl font-black uppercase tracking-wider text-gray-900 dark:text-white">
-                {keywordFromUrl 
-                  ? `Search: "${keywordFromUrl}"` 
-                  : activeCategoryName 
-                    ? activeCategoryName 
-                    : 'All Collections'
-                }
-              </h1>
-            </div>
-            <div className="flex items-center gap-2.5 px-3 py-1.5 bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-800 rounded-full shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
-              <span className="text-xs font-black uppercase tracking-widest text-gray-700 dark:text-gray-300">
-                {filteredProductsCount} Products Found
-              </span>
-            </div>
-          </div>
-        </div>
+       
 
         {/* Filters Panel */}
         <div className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-md p-4 sm:p-5 rounded-3xl border border-gray-200/50 dark:border-gray-800/50 shadow-sm flex flex-col gap-4">
