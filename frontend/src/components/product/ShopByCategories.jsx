@@ -12,7 +12,7 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
   const isEven = index % 2 === 0;
 
   return (
-    <section className={`w-full px-4 lg:px-6 py-3 sm:py-4 mb-0 border-t border-gray-100 dark:border-gray-800 ${
+    <section className={`w-full px-4 lg:px-8 py-8 sm:py-12 mb-0 border-t border-gray-100 dark:border-gray-800 ${
       isEven 
         ? 'bg-white text-gray-900 dark:bg-gray-900 dark:text-white' 
         : 'bg-[#f8f9fa] text-gray-900 dark:bg-gray-950 dark:text-white'
@@ -20,12 +20,12 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
       <div className="max-w-full">
         
         {/* ── Category Header ── */}
-        <div className="flex items-center justify-between pb-3 mb-4">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 gap-4">
+          <div className="flex items-center gap-6">
             {/* Thumbnail */}
-            <div className="w-14 h-14 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex-shrink-0 shadow-sm">
+            <div className="w-20 sm:w-28 h-20 sm:h-28 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex-shrink-0 shadow-sm">
               <img
-                src={optimizeUnsplashUrl(category.image?.url || fallbackImage, 120)}
+                src={optimizeUnsplashUrl(category.image?.url || fallbackImage, 200)}
                 alt={category.name}
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -34,12 +34,12 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
 
             {/* Title + count */}
             <div>
-              <h3 className={`text-xl sm:text-2xl font-black uppercase tracking-widest leading-tight ${
+              <h3 className={`text-3xl md:text-5xl lg:text-6xl font-black uppercase tracking-widest leading-tight ${
                 isEven ? 'text-gray-900 dark:text-white' : 'text-gray-900 dark:text-white'
               }`}>
                 {category.name}
               </h3>
-              <p className={`text-xs sm:text-sm font-bold tracking-wider uppercase mt-1 ${
+              <p className={`text-sm sm:text-base font-bold tracking-[0.2em] uppercase mt-2 ${
                 isEven ? 'text-gray-500 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'
               }`}>
                 {categoryProducts.length} product{categoryProducts.length !== 1 ? 's' : ''}
@@ -50,11 +50,11 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
           {/* Explore link */}
           <Link
             to={`/products?category=${category._id}`}
-            className={`flex items-center gap-1.5 text-xs font-bold hover:underline whitespace-nowrap ${
+            className={`flex items-center gap-1.5 text-sm sm:text-base font-bold hover:underline whitespace-nowrap self-start sm:self-auto ${
               isEven ? 'text-pink-600 dark:text-pink-400' : 'text-pink-600 dark:text-pink-400'
             }`}
           >
-            View All <FiArrowRight className="w-3.5 h-3.5" />
+            View All <FiArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -66,9 +66,9 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
               const slider = e.currentTarget.parentElement.querySelector('.category-slider');
               slider.scrollBy({ left: -800, behavior: 'smooth' });
             }}
-            className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 z-20 w-11 h-11 items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-5 group-hover:translate-x-0"
+            className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 z-20 w-14 h-14 items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-6 group-hover:translate-x-2"
           >
-            <FiChevronLeft className="w-5 h-5 text-gray-800 dark:text-white" />
+            <FiChevronLeft className="w-6 h-6 text-gray-800 dark:text-white" />
           </button>
 
           {/* Right Arrow */}
@@ -77,15 +77,15 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
               const slider = e.currentTarget.parentElement.querySelector('.category-slider');
               slider.scrollBy({ left: 800, behavior: 'smooth' });
             }}
-            className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 z-20 w-11 h-11 items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-5 group-hover:translate-x-0"
+            className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 z-20 w-14 h-14 items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-6 group-hover:-translate-x-2"
           >
-            <FiChevronRight className="w-5 h-5 text-gray-800 dark:text-white" />
+            <FiChevronRight className="w-6 h-6 text-gray-800 dark:text-white" />
           </button>
 
           {/* Products Row */}
-          <div className="category-slider flex gap-3 sm:gap-4 overflow-x-auto scroll-smooth hide-scrollbar pb-2">
+          <div className="category-slider flex gap-4 sm:gap-6 overflow-x-auto scroll-smooth hide-scrollbar pb-4 pt-2 px-2">
             {categoryProducts.map((product) => (
-              <div key={product._id} className="w-[135px] sm:w-[170px] md:w-[195px] lg:w-[215px] flex-shrink-0">
+              <div key={product._id} className="w-[180px] sm:w-[220px] md:w-[260px] lg:w-[300px] flex-shrink-0">
                 <ProductCard product={product} isHome={true} />
               </div>
             ))}
