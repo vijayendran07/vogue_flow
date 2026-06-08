@@ -14,7 +14,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as LineTooltip
 } from 'recharts';
 
-const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
+const COLORS = ['#111827', '#374151', '#4B5563', '#6B7280', '#9CA3AF'];
 
 // Animation Variants
 const containerVariants = {
@@ -27,25 +27,24 @@ const itemVariants = {
     show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300 } }
 };
 
-const StatCard = ({ title, value, icon: Icon, colorClass, bgClass, trend }) => (
+const StatCard = ({ title, value, icon: Icon, trend }) => (
     <motion.div 
         variants={itemVariants} 
         whileHover={{ y: -6, scale: 1.01 }}
-        className="bg-white/40 dark:bg-black/30 border border-white/20 dark:border-white/10 shadow-xl backdrop-blur-xl rounded-[32px] p-6 hover:shadow-2xl transition-all duration-300 relative overflow-hidden group"
+        className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm rounded-[32px] p-6 hover:shadow-md transition-all duration-300 relative overflow-hidden group"
     >
-        <div className="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 rounded-full bg-white/10 dark:bg-white/5 opacity-50 transform group-hover:scale-150 transition-transform duration-700"></div>
         <div className="flex items-center justify-between relative z-10">
             <div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 font-extrabold uppercase tracking-wider mb-1.5">{title}</p>
                 <h3 className="text-3xl font-black text-gray-950 dark:text-white tracking-tight leading-none">{value}</h3>
                 {trend && (
-                    <p className="text-xs text-emerald-500 dark:text-emerald-400 mt-3.5 font-bold flex items-center gap-1">
-                        <span className="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/40">{trend}</span> 
+                    <p className="text-xs text-gray-900 dark:text-gray-100 mt-3.5 font-bold flex items-center gap-1">
+                        <span className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">{trend}</span> 
                         <span className="text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider text-[9px]">this month</span>
                     </p>
                 )}
             </div>
-            <div className={`p-4 rounded-2xl ${bgClass} ${colorClass} shadow-inner backdrop-blur-md bg-white/20 border border-white/20`}>
+            <div className={`p-4 rounded-2xl shadow-inner bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100`}>
                 <Icon className="w-6 h-6" />
             </div>
         </div>
