@@ -42,13 +42,13 @@ const CartItem = ({ item }) => {
                     transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
                     className="relative group"
                 >
-                    <div className="relative overflow-hidden rounded-3xl bg-white/5 border border-white/10 p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-xl transition-all duration-400 backdrop-blur-2xl flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6">
+                    <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-md transition-all duration-400 flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6">
                         
                         {/* Premium edge tracking highlight overlay */}
-                        <div className="absolute top-0 left-0 w-1.5 h-full bg-white scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
+                        <div className="absolute top-0 left-0 w-1.5 h-full bg-black dark:bg-white scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
 
                         {/* Left Asset Render */}
-                        <Link to={`/product/${item.product}`} className="flex-shrink-0 w-full sm:w-32 md:w-32 h-28 sm:h-32 rounded-2xl overflow-hidden bg-white/5 border border-white/10 relative block">
+                        <Link to={`/product/${item.product}`} className="flex-shrink-0 w-full sm:w-32 md:w-32 h-28 sm:h-32 rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 relative block">
                             <img
                                 src={optimizeUnsplashUrl(item.image || 'https://via.placeholder.com/300', 200)}
                                 alt={item.name}
@@ -56,7 +56,7 @@ const CartItem = ({ item }) => {
                                 loading="lazy"
                             />
                             {item.stock <= 5 && item.stock > 0 && (
-                                <span className="absolute top-2 left-2 bg-orange-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                <span className="absolute top-2 left-2 bg-black dark:bg-white text-white dark:text-black text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow">
                                     Low
                                 </span>
                             )}
@@ -65,58 +65,54 @@ const CartItem = ({ item }) => {
                         {/* Mid Info Block */}
                         <div className="flex-1 space-y-2 w-full md:w-auto">
                             <div>
-                                <span className="text-[10px] font-bold text-gray-405 uppercase tracking-widest block mb-0.5">
+                                <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-0.5">
                                     VOGUEFLOW EXCLUSIVE
                                 </span>
                                 <Link to={`/product/${item.product}`} className="inline-block">
-                                    <h3 className="text-base md:text-lg font-black text-white group-hover:text-pink-400 transition-colors line-clamp-2 tracking-tight leading-snug">
+                                    <h3 className="text-base md:text-lg font-black text-gray-950 dark:text-white group-hover:text-gray-500 transition-colors line-clamp-2 tracking-tight leading-snug">
                                         {item.name}
                                     </h3>
                                 </Link>
                             </div>
 
                             <div className="flex items-center gap-3">
-                                <span className="text-sm font-extrabold text-white">
+                                <span className="text-sm font-extrabold text-gray-950 dark:text-white">
                                     {formatCurrency(item.price)}
                                 </span>
-                                <span className="text-xs text-gray-400">
+                                <span className="text-xs font-bold text-gray-400">
                                     Each
                                 </span>
                             </div>
 
                             {/* Counter Controls Suite */}
                             <div className="flex items-center gap-6 pt-2">
-                                <div className="h-10 bg-white/5 border border-white/10 rounded-xl flex items-center p-0.5 w-28 select-none">
-                                    <motion.button
-                                        whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
-                                        whileTap={{ scale: 0.9 }}
+                                <div className="h-10 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center p-0.5 w-28 select-none">
+                                    <button
                                         onClick={() => decreaseQuantity(item.product, item.quantity)}
                                         disabled={item.quantity === 1}
-                                        className="w-8 h-full rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition disabled:opacity-30"
+                                        className="w-8 h-full rounded-lg flex items-center justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition disabled:opacity-30"
                                     >
                                         <FiMinus className="w-3 h-3" />
-                                    </motion.button>
+                                    </button>
                                     
-                                    <span className="flex-1 text-center font-black text-xs text-white">
+                                    <span className="flex-1 text-center font-black text-xs text-gray-900 dark:text-white">
                                         {item.quantity}
                                     </span>
 
-                                    <motion.button
-                                        whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
-                                        whileTap={{ scale: 0.9 }}
+                                    <button
                                         onClick={() => increaseQuantity(item.product, item.quantity, item.stock)}
                                         disabled={item.stock <= item.quantity}
-                                        className="w-8 h-full rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition disabled:opacity-30"
+                                        className="w-8 h-full rounded-lg flex items-center justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition disabled:opacity-30"
                                     >
                                         <FiPlus className="w-3 h-3" />
-                                    </motion.button>
+                                    </button>
                                 </div>
 
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                     onClick={handleRemove}
-                                    className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-red-400 transition-all duration-200"
+                                    className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all duration-200"
                                 >
                                     <FiTrash2 className="w-3.5 h-3.5" />
                                     <span>Remove</span>
@@ -125,9 +121,9 @@ const CartItem = ({ item }) => {
                         </div>
 
                         {/* Right Line Total Highlight viewport */}
-                        <div className="hidden md:block w-px h-16 bg-white/10 mx-6 self-center" />
-                        <div className="flex md:flex-col items-baseline justify-between md:justify-center md:items-start w-full md:w-auto border-t md:border-t-0 border-white/10 pt-3 md:pt-0">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-450 md:mb-1 block">
+                        <div className="hidden md:block w-px h-16 bg-gray-200 dark:bg-gray-800 mx-6 self-center" />
+                        <div className="flex md:flex-col items-baseline justify-between md:justify-center md:items-start w-full md:w-auto border-t md:border-t-0 border-gray-200 dark:border-gray-800 pt-3 md:pt-0">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 md:mb-1 block">
                                 LINE TOTAL
                             </span>
                             
@@ -136,7 +132,7 @@ const CartItem = ({ item }) => {
                                 initial={{ scale: 1.15 }}
                                 animate={{ scale: 1 }}
                                 transition={{ duration: 0.3 }}
-                                className="text-xl sm:text-2xl font-black text-white tracking-tight"
+                                className="text-xl sm:text-2xl font-black text-gray-950 dark:text-white tracking-tight"
                             >
                                 {formatCurrency(itemTotal)}
                             </motion.span>

@@ -53,13 +53,13 @@ const Wishlist = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0f1b2e] dark:bg-[#0a1120] text-white antialiased transition-colors duration-300 w-full pt-10 pb-20">
+        <div className="min-h-screen bg-[#fafafa] dark:bg-gray-950 text-gray-950 dark:text-white antialiased transition-colors duration-300 w-full pt-10 pb-20">
             <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 min-h-[60vh]">
-                <h2 className="text-3xl font-black text-white mb-8 border-b pb-4 border-white/10 flex items-center gap-3">
-                    <FiHeart className="text-red-500 fill-red-500" />
+                <h2 className="text-3xl font-black text-gray-950 dark:text-white mb-8 border-b pb-4 border-gray-200 dark:border-gray-800 flex items-center gap-3 tracking-tight">
+                    <FiHeart className="text-black dark:text-white" />
                     MY WISHLIST
                     {wishlistItems.length > 0 && (
-                        <span className="ml-2 text-xs font-bold bg-white/10 text-white px-3 py-1 rounded-full">
+                        <span className="ml-2 text-[10px] font-black uppercase tracking-widest bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-1 rounded-full">
                             {wishlistItems.length} {wishlistItems.length !== 1 ? 'ITEMS' : 'ITEM'}
                         </span>
                     )}
@@ -68,26 +68,26 @@ const Wishlist = () => {
                 {loading ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[1,2,3,4].map(n => (
-                            <div key={n} className="bg-white/5 rounded-3xl h-80 animate-pulse" />
+                            <div key={n} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl h-80 animate-pulse" />
                         ))}
                     </div>
                 ) : wishlistItems.length === 0 ? (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="text-center py-20 bg-white/5 rounded-3xl border border-white/10"
+                        className="text-center py-20 bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-sm"
                     >
                         <motion.div
                             animate={{ y: [-10, 0, -10] }}
                             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                         >
-                            <FiHeart className="mx-auto h-20 w-20 text-white/20 mb-6" />
+                            <FiHeart className="mx-auto h-20 w-20 text-gray-300 dark:text-gray-700 mb-6" />
                         </motion.div>
-                        <h3 className="text-2xl text-white font-black tracking-tight mb-2">Your wishlist is empty</h3>
-                        <p className="text-gray-400 text-sm mb-6">Save items you love to review them later.</p>
+                        <h3 className="text-2xl text-gray-950 dark:text-white font-black tracking-tight mb-2">Your wishlist is empty</h3>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 font-medium">Save items you love to review them later.</p>
                         <Link
                             to="/products"
-                            className="inline-flex items-center justify-center px-8 py-3.5 bg-white text-gray-900 rounded-full hover:bg-white/90 transition font-bold text-xs uppercase tracking-wider"
+                            className="inline-flex items-center justify-center px-8 py-3.5 bg-black text-white dark:bg-white dark:text-black rounded-full hover:bg-gray-800 dark:hover:bg-gray-200 transition font-bold text-xs uppercase tracking-widest shadow-lg"
                         >
                             Browse Products
                         </Link>
@@ -106,26 +106,26 @@ const Wishlist = () => {
                                     variants={itemVariants}
                                     layout
                                     exit="exit"
-                                    className="bg-white/5 rounded-3xl overflow-hidden border border-white/10 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
+                                    className="bg-white dark:bg-gray-900 rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group"
                                 >
                                     {/* Product Image */}
-                                    <Link to={`/product/${item._id}`} className="block relative overflow-hidden aspect-square bg-white/5">
+                                    <Link to={`/product/${item._id}`} className="block relative overflow-hidden aspect-square bg-gray-100 dark:bg-gray-800">
                                         <img
                                             src={optimizeUnsplashUrl(item.images?.[0]?.url || 'https://via.placeholder.com/300', 300)}
                                             alt={item.name}
-                                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             loading="lazy"
                                         />
                                         {/* Remove Button */}
                                         <button
                                             onClick={(e) => { e.preventDefault(); handleRemove(item._id); }}
-                                            className="absolute top-3 right-3 p-2 bg-black/60 rounded-full text-red-400 hover:text-red-300 hover:bg-black/80 transition shadow"
+                                            className="absolute top-3 right-3 p-2 bg-white/90 dark:bg-black/90 backdrop-blur-md rounded-full text-black dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition shadow"
                                             title="Remove from wishlist"
                                         >
                                             <FiTrash2 className="w-4 h-4" />
                                         </button>
                                         {item.discountPrice && item.discountPrice < item.price && (
-                                            <span className="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
+                                            <span className="absolute top-3 left-3 bg-black dark:bg-white text-white dark:text-black text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow">
                                                 Sale
                                             </span>
                                         )}
@@ -134,20 +134,20 @@ const Wishlist = () => {
                                     {/* Info */}
                                     <div className="p-4 flex flex-col flex-1 justify-between gap-3">
                                         <div>
-                                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">
+                                            <p className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest mb-1">
                                                 {item.category?.name || 'Product'}
                                             </p>
                                             <Link to={`/product/${item._id}`}>
-                                                <h3 className="font-bold text-white text-sm line-clamp-2 hover:text-pink-400 transition-colors">
+                                                <h3 className="font-bold text-gray-900 dark:text-white text-sm line-clamp-2 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors tracking-tight">
                                                     {item.name}
                                                 </h3>
                                             </Link>
                                             <div className="flex items-baseline gap-2 mt-2">
-                                                <span className="font-black text-white">
+                                                <span className="font-black text-gray-950 dark:text-white tracking-tight">
                                                     {formatCurrency(item.discountPrice && item.discountPrice < item.price ? item.discountPrice : item.price)}
                                                 </span>
                                                 {item.discountPrice && item.discountPrice < item.price && (
-                                                    <span className="text-xs text-gray-400 line-through">
+                                                    <span className="text-[10px] font-bold text-gray-400 line-through">
                                                         {formatCurrency(item.price)}
                                                     </span>
                                                 )}
@@ -155,21 +155,14 @@ const Wishlist = () => {
                                         </div>
 
                                         {/* Actions */}
-                                        <div className="flex gap-2 pt-2 border-t border-white/10">
+                                        <div className="flex gap-2 pt-3 border-t border-gray-100 dark:border-gray-800">
                                             <button
                                                 onClick={() => handleAddToCart(item)}
                                                 disabled={item.stock === 0}
-                                                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-white text-gray-900 rounded-xl text-xs font-bold hover:bg-white/90 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                                                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-black text-white dark:bg-white dark:text-black rounded-xl text-xs font-bold hover:bg-gray-800 dark:hover:bg-gray-200 transition shadow disabled:opacity-40 disabled:cursor-not-allowed uppercase tracking-wider"
                                             >
                                                 <FiShoppingCart className="w-3.5 h-3.5" />
                                                 {item.stock === 0 ? 'Out of Stock' : 'Add to Bag'}
-                                            </button>
-                                            <button
-                                                onClick={() => handleRemove(item._id)}
-                                                className="p-2.5 rounded-xl border border-white/10 text-red-400 hover:bg-red-950/20 transition"
-                                                title="Remove"
-                                            >
-                                                <FiTrash2 className="w-3.5 h-3.5" />
                                             </button>
                                         </div>
                                     </div>
