@@ -195,16 +195,12 @@ const Footer = () => {
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="flex items-center text-sm text-gray-600">
-              <span>© {new Date().getFullYear()} VogueFlow. Made with</span>
-              <FiHeart className="w-4 h-4 mx-1 text-black animate-pulse" />
-              <span>for fashion lovers.</span>
+              <span>© {new Date().getFullYear()} VogueFlow</span>
+              
+              
             </div>
 
-            <div className="flex items-center space-x-6 text-sm text-gray-600">
-              <span></span>
-              <span> Secured payment way</span>
-              <span>Free Shipping Over rs.1000</span>
-            </div>
+            
           </div>
         </motion.div>
       </div>

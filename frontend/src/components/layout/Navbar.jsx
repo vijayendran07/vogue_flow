@@ -141,11 +141,7 @@ const Navbar = () => {
             <div className="flex items-center h-full">
               {/* Logo */}
               <Link to="/" className="flex-shrink-0 flex items-center group select-none mr-6">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gray-950 dark:bg-white rounded-xl flex items-center justify-center shadow-md">
-                  <span className="text-lg sm:text-xl font-black text-white dark:text-gray-950 tracking-tight">
-                    V
-                  </span>
-                </div>
+                <img src="/logo.png" alt="VogueFlow" className="h-8 sm:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
               </Link>
 
               {/* Desktop Navigation Links */}
@@ -292,9 +288,7 @@ const Navbar = () => {
 
             {/* Logo Icon (Moved to Right) */}
             <Link to="/" className="flex items-center group select-none flex-shrink-0 pl-1">
-              <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center shadow-md">
-                <span className="text-base font-black text-white tracking-tight">V</span>
-              </div>
+              <img src="/logo.png" alt="VogueFlow" className="h-7 w-auto object-contain" />
             </Link>
           </div>
 
@@ -324,10 +318,7 @@ const Navbar = () => {
               {/* Drawer Header */}
               <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
-                    <span className="text-sm font-black text-white">V</span>
-                  </div>
-                  <span className="font-black text-gray-900 dark:text-white text-base tracking-tight">VAGUEFLOW</span>
+                  <img src="/logo.png" alt="VogueFlow" className="h-8 w-auto object-contain" />
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}

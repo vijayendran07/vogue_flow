@@ -565,8 +565,8 @@ const CheckoutPage = () => {
                                         {/* UPI Options */}
                                         <label className={`block p-6 sm:p-8 rounded-3xl border-2 cursor-pointer transition-all duration-300 relative ${
                                             paymentMethod === 'UPI' 
-                                                ? 'bg-white/10 border-white shadow-md' 
-                                                : 'bg-white/5 border-white/10 opacity-70 hover:opacity-100'
+                                                ? 'bg-gray-50 border-black dark:bg-gray-800 dark:border-white shadow-md' 
+                                                : 'bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-800 opacity-70 hover:opacity-100'
                                         }`}>
                                             <div className="flex items-start gap-4">
                                                 <input 
@@ -749,13 +749,13 @@ const CheckoutPage = () => {
                                     {/* Action Array */}
                                     <div className="pt-4">
                                         {paymentMethod === 'COD' ? (
-                                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch">
                                                 <motion.button
                                                     whileHover={{ scale: 1.02 }}
                                                     whileTap={{ scale: 0.98 }}
                                                     onClick={handlePrevStep}
                                                     disabled={loading}
-                                                    className="w-full sm:w-1/3 h-12 sm:h-14 rounded-2xl border border-gray-200 dark:border-gray-800 text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-gray-900 dark:hover:text-white transition disabled:opacity-30 bg-white dark:bg-gray-900"
+                                                    className="w-full sm:w-1/3 py-4 sm:py-5 rounded-2xl border border-gray-200 dark:border-gray-800 text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-gray-900 dark:hover:text-white transition disabled:opacity-30 bg-white dark:bg-gray-900 flex items-center justify-center"
                                                 >
                                                     Back
                                                 </motion.button>
@@ -766,7 +766,7 @@ const CheckoutPage = () => {
                                                     whileTap="tap"
                                                     onClick={placeOrderHandler}
                                                     disabled={loading}
-                                                    className="flex-1 h-12 sm:h-14 bg-black dark:bg-white text-white dark:text-black font-bold rounded-2xl shadow-xl hover:shadow-2xl transition disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative group overflow-hidden"
+                                                    className="flex-1 py-4 sm:py-5 bg-black dark:bg-white text-white dark:text-black text-xs uppercase tracking-widest font-bold rounded-2xl shadow-xl hover:shadow-2xl transition disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative group overflow-hidden"
                                                 >
                                                     {loading ? (
                                                         <>
@@ -780,7 +780,7 @@ const CheckoutPage = () => {
                                                         <>
                                                             <div className="absolute inset-0 w-1/2 h-full bg-white/10 dark:bg-black/10 skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000" />
                                                             <FiLock className="w-4 h-4 transition-transform group-hover:scale-110" />
-                                                            <span>CONFIRM  CHECKOUT</span>
+                                                            <span>CONFIRM CHECKOUT</span>
                                                             <FiArrowRight className="w-4 h-4" />
                                                         </>
                                                     )}
@@ -788,13 +788,13 @@ const CheckoutPage = () => {
                                             </div>
                                         ) : (
                                              <div className="space-y-6">
-                                                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                                                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch">
                                                      <motion.button
                                                          whileHover={{ scale: 1.02 }}
                                                          whileTap={{ scale: 0.98 }}
                                                          onClick={handlePrevStep}
                                                          disabled={loadingIntent}
-                                                         className="w-full sm:w-1/3 h-12 sm:h-14 rounded-2xl border border-gray-200 dark:border-gray-800 text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-gray-900 dark:hover:text-white transition disabled:opacity-30 bg-white dark:bg-gray-900"
+                                                         className="w-full sm:w-1/3 py-4 sm:py-5 rounded-2xl border border-gray-200 dark:border-gray-800 text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-gray-900 dark:hover:text-white transition disabled:opacity-30 bg-white dark:bg-gray-900 flex items-center justify-center"
                                                      >
                                                          Back
                                                      </motion.button>
@@ -805,7 +805,7 @@ const CheckoutPage = () => {
                                                          whileTap="tap"
                                                          onClick={initiateRazorpayPayment}
                                                          disabled={loadingIntent}
-                                                         className="flex-1 h-12 sm:h-14 bg-black dark:bg-white text-white dark:text-black font-bold rounded-2xl shadow-xl hover:shadow-2xl transition disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative group overflow-hidden"
+                                                         className="flex-1 py-4 sm:py-5 bg-black dark:bg-white text-white dark:text-black text-xs uppercase tracking-widest font-bold rounded-2xl shadow-xl hover:shadow-2xl transition disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative group overflow-hidden"
                                                      >
                                                          {loadingIntent ? (
                                                              <>
