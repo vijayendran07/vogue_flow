@@ -168,11 +168,11 @@ const ProductCard = React.memo(({ product, isHome }) => {
             </div>
 
             {/* Content Section Underneath */}
-            <div className="pt-3 pb-2 flex flex-col space-y-0.5 text-left bg-transparent">
-              <h3 className="text-xs font-black text-gray-900 dark:text-white leading-tight tracking-wide group-hover:text-pink-500 dark:group-hover:text-pink-400 transition-colors duration-200">
+            <div className="pt-3 pb-2 flex flex-col space-y-1 text-left bg-transparent">
+              <h3 className="text-sm sm:text-base font-black text-gray-900 dark:text-white leading-tight tracking-wide group-hover:text-pink-500 dark:group-hover:text-pink-400 transition-colors duration-200">
                 {getPromoOffer()}
               </h3>
-              <p className="text-[10px] text-gray-550 dark:text-gray-400 font-bold truncate leading-normal">
+              <p className="text-xs sm:text-sm text-gray-550 dark:text-gray-400 font-bold truncate leading-normal">
                 {getPromoSubtitle()}
               </p>
             </div>
