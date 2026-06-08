@@ -61,55 +61,52 @@ const OrderSuccess = () => {
     const displayOrder = fetchedOrder || order;
 
     return (
-        <div className="min-h-screen bg-[#0f1b2e] dark:bg-[#0a1120] text-white antialiased transition-colors duration-300 w-full pt-16 pb-20">
+        <div className="min-h-screen bg-[#fafafa] dark:bg-gray-950 text-gray-900 dark:text-white antialiased transition-colors duration-300 w-full pt-16 pb-20">
             <div className="container mx-auto px-4 max-w-3xl flex items-center justify-center min-h-[60vh]">
                 <motion.div 
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="bg-white/5 p-8 md:p-12 rounded-3xl shadow-xl border border-white/10 text-center w-full relative overflow-hidden backdrop-blur-xl"
+                    className="bg-white dark:bg-gray-900 p-8 md:p-12 rounded-3xl shadow-sm border border-gray-200 dark:border-gray-800 text-center w-full relative overflow-hidden"
                 >
-                    {/* Decorative background blob */}
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
-
                     <motion.div 
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
                         className="flex justify-center mb-6 relative"
                     >
-                        <div className="w-24 h-24 bg-emerald-500/15 rounded-full flex items-center justify-center shadow-inner">
-                            <FiCheckCircle className="w-12 h-12 text-emerald-400" />
+                        <div className="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center shadow-inner border border-gray-200 dark:border-gray-700">
+                            <FiCheckCircle className="w-12 h-12 text-gray-900 dark:text-white" />
                         </div>
                     </motion.div>
 
-                    <h1 className="text-3xl md:text-4xl font-black text-white mb-4">
-                        Order Placed Successfully!
+                    <h1 className="text-3xl md:text-4xl font-black tracking-tight text-gray-950 dark:text-white mb-4">
+                        Order Placed Successfully
                     </h1>
                     
-                    <p className="text-white/60 mb-8 max-w-lg mx-auto text-base">
+                    <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-lg mx-auto text-base font-medium">
                         Thank you for your purchase. We've received your order and are getting it ready for dispatch.
                     </p>
 
-                    <div className="bg-white/5 rounded-2xl p-6 mb-8 text-left border border-white/10">
+                    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6 mb-8 text-left border border-gray-200 dark:border-gray-800">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <p className="text-xs font-bold text-white/40 uppercase tracking-wider mb-1">Order Status</p>
-                                <p className="font-semibold text-white flex items-center">
-                                    <span className="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span> Processing
+                                <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Order Status</p>
+                                <p className="font-semibold text-gray-900 dark:text-white flex items-center">
+                                    <span className="w-2 h-2 rounded-full bg-gray-900 dark:bg-white mr-2"></span> Processing
                                 </p>
                             </div>
                             <div>
-                                <p className="text-xs font-bold text-white/40 uppercase tracking-wider mb-1">Payment Method</p>
-                                <p className="font-semibold text-white">{paymentMethod}</p>
+                                <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Payment Method</p>
+                                <p className="font-semibold text-gray-900 dark:text-white">{paymentMethod}</p>
                             </div>
                             {displayOrder && displayOrder._id && (
-                                <div className="md:col-span-2 mt-2 pt-4 border-t border-white/10">
-                                    <p className="text-xs font-bold text-white/40 uppercase tracking-wider mb-1">Order Total</p>
-                                    <p className="text-xl font-bold text-pink-400">
+                                <div className="md:col-span-2 mt-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                    <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Order Total</p>
+                                    <p className="text-xl font-bold text-gray-900 dark:text-white">
                                         {isPaid ? (
-                                            <>Amount Paid: <span className="text-white">{formatCurrency(displayOrder.totalPrice)}</span></>
+                                            <>Amount Paid: <span>{formatCurrency(displayOrder.totalPrice)}</span></>
                                         ) : (
-                                            <>Please keep <span className="text-white">{formatCurrency(displayOrder.totalPrice)}</span> ready at the time of delivery.</>
+                                            <>Please keep <span>{formatCurrency(displayOrder.totalPrice)}</span> ready at the time of delivery.</>
                                         )}
                                     </p>
                                 </div>
@@ -120,13 +117,13 @@ const OrderSuccess = () => {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
                         <Link 
                             to="/orders/me" 
-                            className="flex items-center justify-center px-8 py-3 bg-white/5 border border-white/10 text-white font-bold rounded-xl hover:bg-white/10 transition"
+                            className="flex items-center justify-center px-8 py-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white text-xs uppercase tracking-widest font-bold rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800 transition"
                         >
                             <FiPackage className="mr-2" /> View My Orders
                         </Link>
                         <Link 
                             to="/products" 
-                            className="flex items-center justify-center px-8 py-3 bg-white text-gray-900 font-bold rounded-xl hover:bg-white/95 transition shadow-lg"
+                            className="flex items-center justify-center px-8 py-4 bg-black text-white dark:bg-white dark:text-black text-xs uppercase tracking-widest font-bold rounded-2xl hover:bg-gray-800 dark:hover:bg-gray-200 transition shadow-sm hover:shadow-md"
                         >
                             <FiShoppingBag className="mr-2" /> Continue Shopping
                         </Link>

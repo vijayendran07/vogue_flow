@@ -575,32 +575,32 @@ const CheckoutPage = () => {
                                                     value="UPI" 
                                                     checked={paymentMethod === 'UPI'}
                                                     onChange={(e) => { setPaymentMethod(e.target.value); setSubPaymentMethod(''); }}
-                                                    className="mt-1 w-4 h-4 accent-white"
+                                                    className="mt-1 w-4 h-4 accent-black dark:accent-white"
                                                 />
                                                 <div className="flex-1 space-y-1">
                                                     <div className="flex items-center justify-between">
-                                                        <span className="font-bold text-white text-base">
+                                                        <span className="font-bold text-gray-900 dark:text-white text-base">
                                                             UPI (Unified Payments Interface)
                                                         </span>
-                                                        <FiCheckCircle className={`w-5 h-5 ${paymentMethod === 'UPI' ? 'text-white' : 'text-white/20'}`} />
+                                                        <FiCheckCircle className={`w-5 h-5 ${paymentMethod === 'UPI' ? 'text-black dark:text-white' : 'text-gray-300 dark:text-gray-700'}`} />
                                                     </div>
-                                                    <p className="text-xs text-white/60 leading-relaxed">
+                                                    <p className="text-xs text-gray-500 leading-relaxed">
                                                         Pay instantly using your preferred UPI app.
                                                     </p>
                                                     
                                                     {paymentMethod === 'UPI' && (
                                                         <div className="mt-4 flex flex-col gap-2">
                                                             {['GPay', 'PhonePe', 'Paytm'].map(provider => (
-                                                                <label key={provider} className="flex items-center gap-2 text-sm text-white/80 cursor-pointer">
+                                                                <label key={provider} className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
                                                                     <input 
                                                                         type="radio" 
                                                                         name="subPaymentMethod" 
                                                                         value={provider} 
                                                                         checked={subPaymentMethod === provider}
                                                                         onChange={(e) => setSubPaymentMethod(e.target.value)}
-                                                                        className="w-3.5 h-3.5 accent-white"
+                                                                        className="w-3.5 h-3.5 accent-black dark:accent-white"
                                                                     />
-                                                                    <span>{provider}</span>
+                                                                    <span className="font-medium">{provider}</span>
                                                                 </label>
                                                             ))}
                                                         </div>
