@@ -21,11 +21,11 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
         
         {/* ── Category Header ── */}
         <div className="flex items-center justify-between pb-3 mb-4">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             {/* Thumbnail */}
-            <div className="w-14 h-14 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex-shrink-0 shadow-sm">
+            <div className="w-20 sm:w-24 h-20 sm:h-24 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex-shrink-0 shadow-sm">
               <img
-                src={optimizeUnsplashUrl(category.image?.url || fallbackImage, 120)}
+                src={optimizeUnsplashUrl(category.image?.url || fallbackImage, 200)}
                 alt={category.name}
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -34,12 +34,12 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
 
             {/* Title + count */}
             <div>
-              <h3 className={`text-xl sm:text-2xl font-black uppercase tracking-widest leading-tight ${
+              <h3 className={`text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-widest leading-tight ${
                 isEven ? 'text-gray-900 dark:text-white' : 'text-gray-900 dark:text-white'
               }`}>
                 {category.name}
               </h3>
-              <p className={`text-xs sm:text-sm font-bold tracking-wider uppercase mt-1 ${
+              <p className={`text-sm sm:text-base font-bold tracking-[0.2em] uppercase mt-2 ${
                 isEven ? 'text-gray-500 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'
               }`}>
                 {categoryProducts.length} product{categoryProducts.length !== 1 ? 's' : ''}
