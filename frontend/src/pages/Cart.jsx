@@ -115,7 +115,7 @@ const Cart = () => {
             initial="hidden"
             animate="show"
             variants={containerVariants}
-            className="min-h-screen bg-[#0f1b2e] dark:bg-[#0a1120] text-white antialiased transition-colors duration-300 w-full"
+            className="min-h-screen bg-[#fafafa] dark:bg-gray-950 text-gray-950 dark:text-white antialiased transition-colors duration-300 w-full"
         >
             <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 py-6 sm:py-8 lg:py-12">
                 <div className="mb-6">
@@ -123,7 +123,7 @@ const Cart = () => {
                         variants={buttonVariants}
                         whileHover={{ x: -4 }}
                         onClick={() => navigate('/products')}
-                        className="flex items-center gap-2 text-sm font-semibold text-white/75 hover:text-white transition tracking-wide"
+                        className="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition tracking-wide"
                     >
                         <FiArrowLeft className="w-4 h-4" />
                         <span>Back to Shopping</span>
@@ -134,10 +134,10 @@ const Cart = () => {
                     <>
                         {/* Master Title Statement */}
                         <motion.div variants={itemVariants} className="mb-8 lg:mb-12">
-                            <p className="text-xs font-bold text-pink-400 tracking-widest uppercase mb-1">
+                            <p className="text-xs font-bold text-gray-500 dark:text-gray-400 tracking-widest uppercase mb-1">
                                 Curated Requisition
                             </p>
-                            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-none">
+                            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-gray-950 dark:text-white tracking-tight leading-none">
                                 Review Your Bag
                             </h1>
                         </motion.div>
@@ -146,17 +146,17 @@ const Cart = () => {
                             initial={{ opacity: 0, scale: 0.98 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.5 }}
-                            className="relative overflow-hidden rounded-3xl bg-white/5 border border-white/10 p-12 md:p-24 text-center shadow-sm"
+                            className="relative overflow-hidden rounded-3xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-12 md:p-24 text-center shadow-sm"
                         >
                             <motion.div
-                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-white/5 rounded-full blur-3xl pointer-events-none"
+                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-black/5 dark:bg-white/5 rounded-full blur-3xl pointer-events-none"
                                 animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
                                 transition={{ duration: 6, repeat: Infinity }}
                             />
 
                             <div className="relative z-10 max-w-md mx-auto space-y-6">
                                 <motion.div 
-                                    className="w-20 h-20 rounded-full bg-white/5 shadow-md border border-white/10 flex items-center justify-center mx-auto text-white"
+                                    className="w-20 h-20 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center mx-auto text-gray-400 dark:text-gray-500 shadow-sm"
                                     animate={{ y: [0, -8, 0] }}
                                     transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                                 >
@@ -164,10 +164,10 @@ const Cart = () => {
                                 </motion.div>
 
                                 <div className="space-y-2">
-                                    <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                                    <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-gray-950 dark:text-white">
                                         Your Requisition is Empty
                                     </h2>
-                                    <p className="text-sm text-gray-400 leading-relaxed">
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
                                         Discover absolute modern utility across our master catalog. Add outstanding items to initiate your personal collection portfolio.
                                     </p>
                                 </div>
@@ -181,7 +181,7 @@ const Cart = () => {
                                 >
                                     <Link
                                         to="/products"
-                                        className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-gray-900 font-bold rounded-full text-sm shadow-lg hover:shadow-xl transition"
+                                        className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-black text-white dark:bg-white dark:text-black font-bold rounded-full text-xs uppercase tracking-wider shadow-lg hover:shadow-xl transition"
                                     >
                                         <span>Explore Master Catalog</span>
                                         <FiArrowRight className="w-4 h-4" />
@@ -198,16 +198,16 @@ const Cart = () => {
                             
                             {/* Master Title Statement */}
                             <div className="mb-8 lg:mb-10">
-                                <p className="text-xs font-bold text-pink-400 tracking-widest uppercase mb-1">
+                                <p className="text-xs font-bold text-gray-500 dark:text-gray-400 tracking-widest uppercase mb-1">
                                     CURATED REQUISITION
                                 </p>
-                                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-none">
+                                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-950 dark:text-white tracking-tight leading-none">
                                     Review Your Bag
                                 </h1>
                             </div>
 
-                            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                                <span className="text-xs font-bold text-gray-405 uppercase tracking-wider">
+                            <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-4">
+                                <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     {totalItems} {totalItems === 1 ? 'ITEM IN YOUR BAG' : 'ITEMS IN YOUR BAG'}
                                 </span>
                                 
@@ -218,7 +218,7 @@ const Cart = () => {
                                         dispatch(clearCart());
                                         toast.info('Requisition list reset successfully');
                                     }}
-                                    className="text-xs font-bold text-pink-400 hover:underline tracking-wider uppercase"
+                                    className="text-xs font-bold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:underline tracking-wider uppercase transition"
                                 >
                                     RESET SELECTION
                                 </motion.button>
@@ -238,7 +238,6 @@ const Cart = () => {
                                 </AnimatePresence>
                             </motion.div>
 
-
                             
                             
                             {/* Proceed to Payment Button */}
@@ -250,9 +249,9 @@ const Cart = () => {
                                     whileTap="tap"
                                     onClick={checkoutHandler}
                                     disabled={cartItems.length === 0}
-                                    className="w-full h-14 bg-white text-gray-900 font-bold tracking-widest text-xs uppercase rounded-2xl flex items-center justify-center gap-3 relative overflow-hidden group shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full h-14 bg-black text-white dark:bg-white dark:text-black font-bold tracking-widest text-xs uppercase rounded-2xl flex items-center justify-center gap-3 relative overflow-hidden group shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    <div className="absolute inset-0 w-1/3 h-full bg-white/10 skew-x-12 -translate-x-full group-hover:translate-x-[400%] transition-transform duration-1000" />
+                                    <div className="absolute inset-0 w-1/3 h-full bg-white/20 dark:bg-black/10 skew-x-12 -translate-x-full group-hover:translate-x-[400%] transition-transform duration-1000" />
                                     <FiLock className="w-4 h-4 transition-transform group-hover:scale-110" />
                                     <span>PROCEED TO PAYMENT</span>
                                     <FiArrowRight className="w-4 h-4" />
@@ -267,35 +266,35 @@ const Cart = () => {
                             className="lg:col-span-5 lg:sticky lg:top-32 space-y-6"
                         >
                             {/* Premium Receipt Summary Viewport */}
-                            <div className="p-6 md:p-8 rounded-3xl bg-white/5 border border-white/10 space-y-6">
+                            <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 space-y-6 shadow-sm">
                                 
                                 <div>
-                                    <h3 className="text-lg font-black text-white tracking-tight">
+                                    <h3 className="text-lg font-black text-gray-950 dark:text-white tracking-tight">
                                         Order Summary
                                     </h3>
                                 </div>
 
                                 <div className="space-y-4 text-sm">
                                     {/* Subtotal line */}
-                                    <div className="flex justify-between items-center text-gray-300">
+                                    <div className="flex justify-between items-center text-gray-600 dark:text-gray-400">
                                         <span>Subtotal</span>
-                                        <span className="font-bold text-white">
+                                        <span className="font-bold text-gray-950 dark:text-white">
                                             {formatCurrency(subTotal)}
                                         </span>
                                     </div>
 
                                     {/* Estimated Shipping */}
-                                    <div className="flex justify-between items-center text-gray-300">
+                                    <div className="flex justify-between items-center text-gray-600 dark:text-gray-400">
                                         <span>Logistics & Handling</span>
-                                        <span className={`font-bold ${shippingPrice === 0 ? 'text-emerald-400' : 'text-white'}`}>
+                                        <span className={`font-bold ${shippingPrice === 0 ? 'text-gray-950 dark:text-white font-black' : 'text-gray-950 dark:text-white'}`}>
                                             {shippingPrice === 0 ? 'Complimentary' : formatCurrency(shippingPrice)}
                                         </span>
                                     </div>
 
                                     {/* Luxury Tax */}
-                                    <div className="flex justify-between items-center text-gray-300">
+                                    <div className="flex justify-between items-center text-gray-600 dark:text-gray-400">
                                         <span>GST (5%)</span>
-                                        <span className="font-bold text-white">
+                                        <span className="font-bold text-gray-950 dark:text-white">
                                             {formatCurrency(taxPrice)}
                                         </span>
                                     </div>
@@ -307,7 +306,7 @@ const Cart = () => {
                                                 initial={{ opacity: 0, y: -5 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: -5 }}
-                                                className="flex justify-between items-center p-3 rounded-xl bg-emerald-950/30 border border-emerald-900/40 text-emerald-300 font-bold text-xs uppercase tracking-wider"
+                                                className="flex justify-between items-center p-3 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 font-bold text-xs uppercase tracking-wider"
                                             >
                                                 <span>Privilege Applied ({discountPercentage}%)</span>
                                                 <span>−{formatCurrency(estimatedDiscount)}</span>
@@ -316,8 +315,8 @@ const Cart = () => {
                                     </AnimatePresence>
 
                                     {/* Grand Total Execution block */}
-                                    <div className="pt-4 border-t border-white/10 flex justify-between items-baseline">
-                                        <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                                    <div className="pt-4 border-t border-gray-200 dark:border-gray-800 flex justify-between items-baseline">
+                                        <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                             TO PAY
                                         </span>
                                         
@@ -325,7 +324,7 @@ const Cart = () => {
                                             key={totalPrice}
                                             initial={{ scale: 1.1 }}
                                             animate={{ scale: 1 }}
-                                            className="text-3xl font-black text-white tracking-tight"
+                                            className="text-3xl font-black text-gray-950 dark:text-white tracking-tight"
                                         >
                                             {formatCurrency(totalPrice)}
                                         </motion.span>
@@ -334,8 +333,8 @@ const Cart = () => {
                             </div>
 
                             {/* Promo Code Validation Sub-Desk */}
-                            <div className="p-6 rounded-3xl bg-white/5 border border-white/10 space-y-4">
-                                <h3 className="text-lg font-black text-white tracking-tight flex items-center gap-2">
+                            <div className="p-6 rounded-3xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 space-y-4 shadow-sm">
+                                <h3 className="text-lg font-black text-gray-950 dark:text-white tracking-tight flex items-center gap-2">
                                 <span>Apply Coupon</span>
                                 </h3>
 
@@ -346,7 +345,7 @@ const Cart = () => {
                                         value={couponCode}
                                         onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                                         onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
-                                        className="flex-1 px-4 py-3 rounded-xl border border-white/10 bg-[#0f1b2e] text-white text-sm font-bold placeholder-gray-500 focus:outline-none focus:border-white transition"
+                                        className="flex-1 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black text-gray-900 dark:text-white text-sm font-bold placeholder-gray-400 focus:outline-none focus:border-black dark:focus:border-white transition"
                                     />
                                     
                                     <motion.button
@@ -355,7 +354,7 @@ const Cart = () => {
                                         whileTap="tap"
                                         onClick={handleApplyCoupon}
                                         disabled={isApplying}
-                                        className="px-6 py-3 bg-white text-gray-900 font-bold rounded-xl text-xs uppercase tracking-wider hover:shadow-md transition disabled:opacity-50 flex items-center justify-center"
+                                        className="px-6 py-3 bg-black text-white dark:bg-white dark:text-black font-bold rounded-xl text-xs uppercase tracking-wider hover:shadow-md transition disabled:opacity-50 flex items-center justify-center"
                                     >
                                         {isApplying ? 'Validating...' : 'APPLY'}
                                     </motion.button>
@@ -363,7 +362,7 @@ const Cart = () => {
 
                                 {availableCoupons.length > 0 && (
                                     <div className="pt-2">
-                                        <p className="text-[11px] font-bold uppercase tracking-wider text-gray-450 mb-2">AVAILABLE CODES</p>
+                                        <p className="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">AVAILABLE CODES</p>
                                         <div className="flex flex-wrap gap-2">
                                             {availableCoupons.slice(0, 5).map((coupon) => (
                                                 <button
@@ -376,7 +375,7 @@ const Cart = () => {
                                                             toast.success(`Applied ${coupon.code}`);
                                                         }
                                                     }}
-                                                    className="px-3 py-1.5 rounded-full border border-white/10 bg-[#0f1b2e] text-xs font-bold tracking-wide text-gray-300 hover:border-white hover:text-white transition"
+                                                    className="px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black text-xs font-bold tracking-wide text-gray-600 dark:text-gray-300 hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white transition"
                                                 >
                                                     {coupon.code} ({coupon.discountPercentage}%)
                                                 </button>
