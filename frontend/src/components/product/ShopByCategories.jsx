@@ -125,17 +125,17 @@ const ShopByCategories = ({
   return (
     <div className="w-full">
       {/* ── Section Main Header ── */}
-      <section className="w-full px-4 sm:px-6 lg:px-8 py-6 mb-0" style={{ background: 'linear-gradient(135deg, #C0392B 0%, #922B21 50%, #D35400 100%)' }}>
+      <section className="w-full px-4 sm:px-6 lg:px-8 py-3 md:py-6 mb-0" style={{ background: 'linear-gradient(135deg, #C0392B 0%, #922B21 50%, #D35400 100%)' }}>
         <div className="flex flex-col items-center text-center">
-          <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
+          <h2 className="text-xl md:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight">
             Shop By Category
           </h2>
-          <p className="text-sm text-white/75 mt-2">
+          <p className="text-[10px] md:text-sm text-white/80 mt-0.5 md:mt-2">
             All products grouped by category — explore everything
           </p>
           <Link
             to="/products"
-            className="text-sm font-bold text-white hover:text-white/80 hover:underline mt-4"
+            className="text-xs md:text-sm font-bold text-white hover:text-white/80 hover:underline mt-2 md:mt-4 inline-block"
           >
             All Products →
           </Link>
