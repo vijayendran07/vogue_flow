@@ -12,7 +12,7 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
   const isEven = index % 2 === 0;
 
   return (
-    <section className={`w-full px-4 lg:px-8 py-3 lg:py-12 mb-0 border-t border-gray-100 dark:border-gray-800 ${
+    <section className={`w-full px-4 md:px-8 py-3 md:py-8 mb-0 border-t border-gray-100 dark:border-gray-800 ${
       isEven 
         ? 'bg-white text-gray-900 dark:bg-gray-900 dark:text-white' 
         : 'bg-[#f8f9fa] text-gray-900 dark:bg-gray-950 dark:text-white'
@@ -20,12 +20,12 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
       <div className="max-w-full">
         
         {/* ── Category Header ── */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between pb-2 lg:pb-4 mb-3 lg:mb-6 gap-2 lg:gap-4">
-          <div className="flex items-center gap-3 lg:gap-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between pb-2 md:pb-4 mb-3 md:mb-4 gap-2 md:gap-4">
+          <div className="flex items-center gap-3 md:gap-4">
             {/* Thumbnail */}
-            <div className="w-7 h-7 lg:w-28 lg:h-28 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex-shrink-0 shadow-sm">
+            <div className="w-7 h-7 md:w-[72px] md:h-[72px] rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex-shrink-0 shadow-sm">
               <img
-                src={optimizeUnsplashUrl(category.image?.url || fallbackImage, 200)}
+                src={optimizeUnsplashUrl(category.image?.url || fallbackImage, 150)}
                 alt={category.name}
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -34,12 +34,12 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
 
             {/* Title + count */}
             <div>
-              <h3 className={`text-sm lg:text-5xl xl:text-6xl font-black uppercase tracking-widest leading-tight ${
+              <h3 className={`text-sm md:text-2xl font-black uppercase tracking-widest leading-tight ${
                 isEven ? 'text-gray-900 dark:text-white' : 'text-gray-900 dark:text-white'
               }`}>
                 {category.name}
               </h3>
-              <p className={`text-[10px] lg:text-sm font-bold tracking-wider lg:tracking-[0.2em] uppercase mt-0.5 lg:mt-2 ${
+              <p className={`text-[10px] md:text-xs font-bold tracking-wider md:tracking-[0.15em] uppercase mt-0.5 md:mt-1 ${
                 isEven ? 'text-gray-500 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'
               }`}>
                 {categoryProducts.length} product{categoryProducts.length !== 1 ? 's' : ''}
@@ -50,11 +50,11 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
           {/* Explore link */}
           <Link
             to={`/products?category=${category._id}`}
-            className={`flex items-center gap-1.5 text-xs lg:text-base font-bold hover:underline whitespace-nowrap self-start md:self-auto ${
+            className={`flex items-center gap-1.5 text-xs md:text-sm font-bold hover:underline whitespace-nowrap self-start md:self-auto ${
               isEven ? 'text-pink-600 dark:text-pink-400' : 'text-pink-600 dark:text-pink-400'
             }`}
           >
-            View All <FiArrowRight className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+            View All <FiArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
           </Link>
         </div>
 
@@ -64,28 +64,28 @@ const CategoryRow = ({ category, categoryProducts, fallbackImage, index }) => {
           <button
             onClick={(e) => {
               const slider = e.currentTarget.parentElement.querySelector('.category-slider');
-              slider.scrollBy({ left: -800, behavior: 'smooth' });
+              slider.scrollBy({ left: -600, behavior: 'smooth' });
             }}
-            className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 z-20 w-14 h-14 items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-6 group-hover:translate-x-2"
+            className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-5 group-hover:translate-x-2"
           >
-            <FiChevronLeft className="w-6 h-6 text-gray-800 dark:text-white" />
+            <FiChevronLeft className="w-5 h-5 text-gray-800 dark:text-white" />
           </button>
 
           {/* Right Arrow */}
           <button
             onClick={(e) => {
               const slider = e.currentTarget.parentElement.querySelector('.category-slider');
-              slider.scrollBy({ left: 800, behavior: 'smooth' });
+              slider.scrollBy({ left: 600, behavior: 'smooth' });
             }}
-            className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 z-20 w-14 h-14 items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-6 group-hover:-translate-x-2"
+            className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-5 group-hover:-translate-x-2"
           >
-            <FiChevronRight className="w-6 h-6 text-gray-800 dark:text-white" />
+            <FiChevronRight className="w-5 h-5 text-gray-800 dark:text-white" />
           </button>
 
           {/* Products Row */}
-          <div className="category-slider flex gap-3 lg:gap-6 overflow-x-auto scroll-smooth hide-scrollbar pb-2 lg:pb-4 pt-1 lg:pt-2 px-1 lg:px-2">
+          <div className="category-slider flex gap-3 md:gap-4 lg:gap-5 overflow-x-auto scroll-smooth hide-scrollbar pb-2 md:pb-3 pt-1 px-1">
             {categoryProducts.map((product) => (
-              <div key={product._id} className="w-[135px] sm:w-[170px] md:w-[195px] lg:w-[300px] flex-shrink-0">
+              <div key={product._id} className="w-[135px] sm:w-[170px] md:w-[190px] lg:w-[220px] flex-shrink-0">
                 <ProductCard product={product} isHome={true} />
               </div>
             ))}
