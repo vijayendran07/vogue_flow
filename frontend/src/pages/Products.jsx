@@ -193,7 +193,7 @@ const Products = () => {
             <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3">
               {/* Category */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Category</label>
+                <label className="text-[20px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Category</label>
                 <select
                   value={category}
                   onChange={handleCategoryChange}
@@ -208,7 +208,7 @@ const Products = () => {
 
               {/* Price */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Price Range</label>
+                <label className="text-[20px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Price Range</label>
                 <select
                   value={
                     price[0] === 0 && price[1] === 25000 ? '' :
@@ -233,7 +233,7 @@ const Products = () => {
 
               {/* Rating */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Rating</label>
+                <label className="text-[20px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Rating</label>
                 <select
                   value={ratings}
                   onChange={handleRatingChange}
@@ -249,7 +249,7 @@ const Products = () => {
 
               {/* Discount */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Discount</label>
+                <label className="text-[20px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Discount</label>
                 <select
                   value={selectedDiscount}
                   onChange={handleDiscountChange}
@@ -264,7 +264,7 @@ const Products = () => {
 
               {/* Sort By */}
               <div className="flex flex-col gap-1 col-span-2 sm:col-span-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Sort By</label>
+                <label className="text-[20px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Sort By</label>
                 <select
                   value={sort}
                   onChange={handleSortChange}
